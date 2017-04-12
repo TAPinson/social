@@ -11,4 +11,4 @@ NOT YET DEPLOYED
 
 Developer:
 Travis Pinson
-travispinson@gmial.com
+travispinson@gmail.com
