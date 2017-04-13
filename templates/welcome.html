@@ -5,9 +5,11 @@
 
 <p>
   <ol class="user-posts">
-      {% for x in range (1,11) %}
+    Posts by {{username}}:
+
       <!-- gotta figure out what code I need here to show all posts from
       the user -->
-        <li>{{x + 1}}</li>
-      {% endfor %}
+        <li>{{name}}</li>
+      {{UserPosts}}
+
 {% endblock %}

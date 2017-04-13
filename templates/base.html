@@ -3,7 +3,7 @@
 <head>
   <link type="text/css" rel="stylesheet" href="/static/main.css" />
 
-  <title>/social/</title>
+  <title class="blog-title-head">/social/</title>
 </head>
 
 <body>
@@ -25,14 +25,18 @@
       <a class="login-link" href="/login">login</a>
       |
       <a class="login-link" href="/signup">signup</a>
+      |
+      <a class="home-link" href="/blog">home</a>
 
     {% endif %}
   </div>
+  <hr class="page-divider"><br>
 
   <div id="content">
   {% block content %}
   {% endblock %}
   </div>
+
 </body>
 
 </html>

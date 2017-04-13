@@ -1,17 +1,10 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 
-<html>
-  <head>
-    <title>Login</title>
-    <style type="text/css">
-      .label {text-align: right}
-      .error {color: red}
-    </style>
-
-  </head>
+{% block content %}
 
   <body>
     <h2>Login</h2>
+    <div class="loginsheet">
     <form method="post">
       <table>
         <tr>
@@ -37,9 +30,10 @@
         {{error}}
       </div>
 
-      <input type="submit">
+      <input type="submit" class="login-submit">
+      <hr>
     </form>
-    <a class="home-link" href="/blog">Home</a>
+    <p>
+    </div>
   </body>
-
-</html>
+{% endblock %}

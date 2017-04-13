@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>new post</h2>
+  <h2>new Post</h2>
 
     <form method="post">
       <label>
@@ -14,6 +14,10 @@
         <textarea name="content">{{content}}</textarea>
       </label>
 
+      <label>
+        <div>name</div>
+        <input type="radio" name="name" value="{{name}}">
+      </label>
 
 
       <div class="error">{{error}}</div>
