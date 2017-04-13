@@ -14,6 +14,8 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
                                autoescape = True)
 
+
+
 secret = 'ROFLcoptor'
 
 def render_str(template, **params):
@@ -63,7 +65,7 @@ class BlogHandler(webapp2.RequestHandler):
 def render_post(response, post):
     response.out.write('<b>' + post.subject + '</b><br>')
     response.out.write(post.content)
-    response.out.write(post.username)
+    response.out.write(post.name)
 
 class MainPage(BlogHandler):
   def get(self):
@@ -138,6 +140,11 @@ class BlogFront(BlogHandler):
         posts = db.GqlQuery("select * from Post order by created desc")
         self.render('front.html', posts = posts)
 
+   ## def post(self):
+    ##    delete = db.GglQuery("delete * from Post")
+    ##  self.redirect('/blog')
+
+
 class PostPage(BlogHandler):
     def get(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
@@ -156,17 +163,20 @@ class NewPost(BlogHandler):
         else:
             self.redirect("/login")
 
+    ### THIS IS THE FUNCTION TO ADD THE POST TO THE GQL LIBRARY ###
     def post(self):
         if not self.user:
             self.redirect('/blog')
 
         subject = self.request.get('subject')
         content = self.request.get('content')
+
         #username = self.user
 
-
+        ### THIS IS THE SECTION THAT ACTUALLY ADDS THE POST TO THE GQL LIBRARY ###
+        ### THIS IS TH GQL ###
         if subject and content:
-            p = Post(parent = blog_key(), subject = subject, content = content)#, username = username)
+            p = Post(parent = blog_key(), subject = subject, content = content)
             p.put()
             self.redirect('/blog/%s' % str(p.key().id()))
         else:
@@ -278,6 +288,7 @@ class Logout(BlogHandler):
 
 class Unit3Welcome(BlogHandler):
     def get(self):
+
         if self.user:
             self.render('welcome.html', username = self.user.name)
         else:
@@ -300,6 +311,12 @@ class Welcome(BlogHandler):
         else:
             self.redirect('/unit2/signup')
 
+class UserPosts(BlogHandler):
+
+    def get(self):
+        self.redirect('myposts.html')
+
+
 
 
 
@@ -315,5 +332,6 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/logout', Logout),
                                ('/unit3/welcome', Unit3Welcome),
                                ('/unit3/myprofile', MyProfile),
+                               ('/unit3/myprofile/posts', UserPosts)
                                ],
                               debug=True)

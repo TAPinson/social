@@ -8,7 +8,7 @@
     <div class="post-date">
       {{p.created.strftime("%b %d, %Y")}}
 
-
+      {{p.name}}
 
     </div>
 
@@ -18,5 +18,10 @@
 
   <div class="post-content">
     {{p._render_text | safe}}
+  <form>
+    <input type="submit" method="post" class="LikeButton" value="like">
+    <input type="submit" method="post" class="DislikeButton" value="dislike">
+    <input type="submit" method="post" class="DeleteButton" value="delete">
+  </form>
   </div>
 </div>

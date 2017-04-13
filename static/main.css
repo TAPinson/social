@@ -2,32 +2,60 @@ body {
     position: relative;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 14px;
-
+    background-color: #2d3c49;
     width: 800px;
     margin: 0 auto;
     padding: 10px;
-    color: #333;
+    color: #7d97ad;
+}
+
+.main-title {
+    display: block;
+    color: #7d97ad;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+    text-decoration: none;
 }
 
 .login-area {
     font-size: 13px;
-    color: gray;
+    color: #7d97ad;
     position: absolute;
     top: 10px;
     right: 10px;
 }
 
-.login-link {
-    color: gray;
-    text-decoration: none;
+.home-link {
+  color: #7d97ad;
+  text-decoration: none;
 }
 
-.login-link:visited {
-    color: gray;
+.post-link{
+  color: #7d97ad;
+  text-decoration: none;
+}
+
+.profile-link{
+  color: #7d97ad;
+  text-decoration: none;
+}
+
+.login-link {
+    color: #7d97ad;
+    text-decoration: none;
 }
 
 .login-link:hover {
     text-decoration: underline;
+}
+
+.page-divider {
+  border-style: solid;
+  height: 1px;
+  background-color: #666;
+  color: #666;
 }
 
 h2 {
@@ -40,9 +68,30 @@ h2 {
     color: red;
 }
 
+.signupsheet {
+  padding-top: 3%;
+}
+
+.loginsheet {
+  color: #7d97ad;
+}
+
+.signup-submit {
+  margin-left: 42.5%;
+  margin-top: 3%;
+  margin-bottom: 2%;
+}
+
+.login-submit {
+  margin-left: 42.5%;
+  margin-top: 3%;
+  margin-bottom: 2%;
+}
+
 label {
   display: block;
   font-size: 20px;
+  text-align: left;
 }
 
 label + label {
@@ -64,18 +113,10 @@ textarea {
 }
 
 input[type=submit] {
-  font-size: 24px;
+  font-size: 18px;
 }
 
-.main-title {
-    display: block;
-    color: #222;
-    font-size: 40px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 30px;
-    text-decoration: none;
-}
+
 
 .post + .post {
     margin-top: 15px;
@@ -89,20 +130,41 @@ input[type=submit] {
 .post-title {
     font-size: 24px;
     font-weight: bold;
+    color: #7d97ad;
 }
 
 .post-date {
     position: absolute;
-    right: 0px;
+    right: 225px;
     bottom: 0px;
-    color: #999;
-}
-
-.post-username {
-
-  
+    color: #7d97ad;
 }
 
 .post-content {
     margin-top: 5px;
+    color: #7d97ad;
+}
+
+.DeleteButton {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+
+.LikeButton {
+  position: absolute;
+  right: 75px;
+  bottom: 0px;
+}
+
+.DislikeButton {
+  position: absolute;
+  right: 135px;
+  bottom: 0px;
+}
+
+.poster-name {
+    position: absolute;
+    right: 200px
+    bottom: 0px
 }
