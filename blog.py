@@ -14,8 +14,6 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
                                autoescape = True)
 
-
-
 secret = 'ROFLcoptor'
 
 def render_str(template, **params):
@@ -31,6 +29,7 @@ def check_secure_val(secure_val):
         return val
 
 class BlogHandler(webapp2.RequestHandler):
+
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
@@ -69,8 +68,8 @@ def render_post(response, post):
     response.out.write(post.id)
 
 class MainPage(BlogHandler):
-  def get(self):
-      self.redirect('/blog')
+    def get(self):
+        self.redirect('/blog')
 
 
 ##### user stuff
@@ -132,25 +131,20 @@ class Post(db.Model):
     author = db.StringProperty(required=True)
 
 
-
-
-
-
     def render(self):
         self._render_text = self.content.replace('\n', '<br>')
         return render_str("post.html", p = self)
 
+
 class BlogFront(BlogHandler):
+
     def get(self):
         posts = db.GqlQuery("select * from Post order by created desc")
         self.render('front.html', posts = posts)
 
-   ## def post(self):
-    ##    delete = db.GglQuery("delete * from Post")
-    ##  self.redirect('/blog')
-
 
 class PostPage(BlogHandler):
+
     def get(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
@@ -160,6 +154,7 @@ class PostPage(BlogHandler):
             return
 
         self.render("permalink.html", post = post)
+
 
 class NewPost(BlogHandler):
     def get(self):
@@ -186,9 +181,6 @@ class NewPost(BlogHandler):
         else:
             error = "subject and content, please!"
             self.render("newpost.html", subject=subject, content=content, error=error)
-
-
-
 
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
@@ -240,12 +232,6 @@ class Signup(BlogHandler):
 
     def done(self, *a, **kw):
         raise NotImplementedError
-
-
-class Unit2Signup(Signup):
-
-    def done(self):
-        self.redirect('/unit2/welcome?username=' + self.username)
 
 
 class Register(Signup):
@@ -310,7 +296,7 @@ class Welcome(BlogHandler):
         if valid_username(username):
             self.render('welcome.html', username = username)
         else:
-            self.redirect('/unit2/signup')
+            self.redirect('/signup')
 
 
 class MyPosts(BlogHandler):
@@ -325,12 +311,9 @@ class MyPosts(BlogHandler):
 
 
 
+app = webapp2.WSGIApplication  ([('/', MainPage),
 
 
-
-app = webapp2.WSGIApplication([('/', MainPage),
-                               ('/unit2/signup', Unit2Signup),
-                               ('/unit2/welcome', Welcome),
                                ('/blog/?', BlogFront),
                                ('/blog/([0-9]+)', PostPage),
                                ('/blog/newpost', NewPost),
@@ -340,6 +323,6 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/unit3/welcome', Unit3Welcome),
                                ('/unit3/welcome/myposts', MyPosts),
                                ('/unit3/myprofile', MyProfile),
-                              # ('/unit3/myprofile/posts', UserPosts)
+
                                ],
                               debug=True)
