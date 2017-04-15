@@ -133,38 +133,38 @@ input[type=submit] {
     color: #7d97ad;
 }
 
-.post-date {
-    position: absolute;
-    right: 225px;
-    bottom: 0px;
-    color: #7d97ad;
-}
-
 .post-content {
     margin-top: 5px;
     color: #7d97ad;
 }
 
-.DeleteButton {
+.post-date {
     position: absolute;
-    right: 0px;
-    bottom: 0px;
+    right: 0;
+    bottom: 0;
+    color: #7d97ad;
+}
+
+.post-options {
+  margin-top: 5%;
+  font-style: italic;
+  font-size: 26px;
 }
 
 .LikeButton {
   position: absolute;
-  right: 75px;
-  bottom: 0px;
+  right: 285px;
+  bottom: 0;
 }
 
 .DislikeButton {
   position: absolute;
-  right: 135px;
-  bottom: 0px;
+  right: 245px;
+  bottom: 0;
 }
 
-.poster-name {
+.DeleteButton {
     position: absolute;
-    right: 200px
-    bottom: 0px
+    right: 200px;
+    bottom: 0;
 }

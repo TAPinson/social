@@ -66,6 +66,7 @@ def render_post(response, post):
     response.out.write('<b>' + post.subject + '</b><br>')
     response.out.write(post.content)
     response.out.write(post.name)
+    response.out.write(post.id)
 
 class MainPage(BlogHandler):
   def get(self):
@@ -128,6 +129,10 @@ class Post(db.Model):
     content = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
     last_modified = db.DateTimeProperty(auto_now = True)
+    author = db.StringProperty(required=True)
+
+
+
 
 
 
@@ -167,16 +172,15 @@ class NewPost(BlogHandler):
     def post(self):
         if not self.user:
             self.redirect('/blog')
-
         subject = self.request.get('subject')
         content = self.request.get('content')
+        author = self.request.get('author')
 
-        #username = self.user
 
         ### THIS IS THE SECTION THAT ACTUALLY ADDS THE POST TO THE GQL LIBRARY ###
         ### THIS IS TH GQL ###
         if subject and content:
-            p = Post(parent = blog_key(), subject = subject, content = content)
+            p = Post(parent = blog_key(), subject = subject, content = content, author = author)
             p.put()
             self.redirect('/blog/%s' % str(p.key().id()))
         else:
@@ -311,10 +315,18 @@ class Welcome(BlogHandler):
         else:
             self.redirect('/unit2/signup')
 
-class UserPosts(BlogHandler):
+class MyPosts(BlogHandler):
+
+    #def get(self):
+        #self.render('myposts.html', username = self.user.name)
 
     def get(self):
-        self.redirect('myposts.html')
+        posts = db.GqlQuery("SELECT * FROM Post where author = 'karl'")
+        self.render('myposts.html', username = self.user.name, posts = posts)
+
+
+
+
 
 
 
@@ -331,7 +343,8 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/login', Login),
                                ('/logout', Logout),
                                ('/unit3/welcome', Unit3Welcome),
+                               ('/unit3/welcome/myposts', MyPosts),
                                ('/unit3/myprofile', MyProfile),
-                               ('/unit3/myprofile/posts', UserPosts)
+                              # ('/unit3/myprofile/posts', UserPosts)
                                ],
                               debug=True)

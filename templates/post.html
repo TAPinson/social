@@ -6,10 +6,7 @@
     </div>
 
     <div class="post-date">
-      {{p.created.strftime("%b %d, %Y")}}
-
-      {{p.name}}
-
+      {{p.created.strftime("%b %d, %Y")}} | {{p.author}}
     </div>
 
 
@@ -18,10 +15,15 @@
 
   <div class="post-content">
     {{p._render_text | safe}}
-  <form>
-    <input type="submit" method="post" class="LikeButton" value="like">
-    <input type="submit" method="post" class="DislikeButton" value="dislike">
-    <input type="submit" method="post" class="DeleteButton" value="delete">
-  </form>
+    <p>
+
+      <form class="post-options">
+        <div class="LikeButton">🖒
+        </div>
+        <div class="DislikeButton">🖓
+        </div>
+        <div class=DeleteButton>🗵
+        </div>
+      </form>
   </div>
 </div>
