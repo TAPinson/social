@@ -188,18 +188,7 @@ class NewPost(BlogHandler):
             self.render("newpost.html", subject=subject, content=content, error=error)
 
 
-###### Unit 2 HW's
-class Rot13(BlogHandler):
-    def get(self):
-        self.render('rot13-form.html')
 
-    def post(self):
-        rot13 = ''
-        text = self.request.get('text')
-        if text:
-            rot13 = text.encode('rot13')
-
-        self.render('rot13-form.html', text = rot13)
 
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
@@ -215,6 +204,7 @@ def valid_email(email):
     return not email or EMAIL_RE.match(email)
 
 class Signup(BlogHandler):
+
     def get(self):
         self.render("signup-form.html")
 
@@ -251,11 +241,15 @@ class Signup(BlogHandler):
     def done(self, *a, **kw):
         raise NotImplementedError
 
+
 class Unit2Signup(Signup):
+
     def done(self):
         self.redirect('/unit2/welcome?username=' + self.username)
 
+
 class Register(Signup):
+
     def done(self):
         #make sure the user doesn't already exist
         u = User.by_name(self.username)
@@ -269,7 +263,9 @@ class Register(Signup):
             self.login(u)
             self.redirect('/blog')
 
+
 class Login(BlogHandler):
+
     def get(self):
         self.render('login-form.html')
 
@@ -285,6 +281,7 @@ class Login(BlogHandler):
             msg = 'Invalid login'
             self.render('login-form.html', error = msg)
 
+
 class Logout(BlogHandler):
     def get(self):
         self.logout()
@@ -292,7 +289,6 @@ class Logout(BlogHandler):
 
 class Unit3Welcome(BlogHandler):
     def get(self):
-
         if self.user:
             self.render('welcome.html', username = self.user.name)
         else:
@@ -301,6 +297,7 @@ class Unit3Welcome(BlogHandler):
 
 
 class MyProfile(BlogHandler):
+
     def get(self):
         if self.user:
             self.render('welcome.html', username = self.user.name)
@@ -315,13 +312,12 @@ class Welcome(BlogHandler):
         else:
             self.redirect('/unit2/signup')
 
+
 class MyPosts(BlogHandler):
 
-    #def get(self):
-        #self.render('myposts.html', username = self.user.name)
-
     def get(self):
-        posts = db.GqlQuery("SELECT * FROM Post where author = 'karl'")
+        username = self.user.name
+        posts = db.GqlQuery("SELECT * FROM Post where author = :author", author=username)
         self.render('myposts.html', username = self.user.name, posts = posts)
 
 
@@ -333,7 +329,6 @@ class MyPosts(BlogHandler):
 
 
 app = webapp2.WSGIApplication([('/', MainPage),
-                               ('/unit2/rot13', Rot13),
                                ('/unit2/signup', Unit2Signup),
                                ('/unit2/welcome', Welcome),
                                ('/blog/?', BlogFront),
