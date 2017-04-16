@@ -181,7 +181,15 @@ input[type=submit] {
     padding-bottom: 0.5%;
 }
 
+.confirmdeleteform {
+  margin-top: 5%;
+  margin-left: 22%;
+}
 
+.confirmdeletebutton {
+  margin-top: 5%;
+  margin-left: 25%;
+}
 
 .post-link {
   position: absolute;

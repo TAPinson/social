@@ -28,6 +28,8 @@ def check_secure_val(secure_val):
     if secure_val == make_secure_val(val):
         return val
 
+########################################################################################################################
+
 class BlogHandler(webapp2.RequestHandler):
 
     def write(self, *a, **kw):
@@ -67,6 +69,8 @@ def render_post(response, post):
     response.out.write(post.name)
     response.out.write(post.id)
 
+########################################################################################################################
+
 class MainPage(BlogHandler):
     def get(self):
         self.redirect('/blog')
@@ -88,6 +92,8 @@ def valid_pw(name, password, h):
 
 def users_key(group = 'default'):
     return db.Key.from_path('users', group)
+
+########################################################################################################################
 
 class User(db.Model):
     name = db.StringProperty(required = True)
@@ -123,6 +129,8 @@ class User(db.Model):
 def blog_key(name = 'default'):
     return db.Key.from_path('blogs', name)
 
+########################################################################################################################
+
 class Post(db.Model):
     subject = db.StringProperty(required = True)
     content = db.TextProperty(required = True)
@@ -135,6 +143,7 @@ class Post(db.Model):
         self._render_text = self.content.replace('\n', '<br>')
         return render_str("post.html", p = self)
 
+########################################################################################################################
 
 class BlogFront(BlogHandler):
 
@@ -142,6 +151,7 @@ class BlogFront(BlogHandler):
         posts = db.GqlQuery("select * from Post order by created desc")
         self.render('front.html', posts = posts)
 
+########################################################################################################################
 
 class PostPage(BlogHandler):
 
@@ -155,6 +165,7 @@ class PostPage(BlogHandler):
 
         self.render("permalink.html", post = post)
 
+########################################################################################################################
 
 class NewPost(BlogHandler):
     def get(self):
@@ -195,6 +206,8 @@ EMAIL_RE  = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
 def valid_email(email):
     return not email or EMAIL_RE.match(email)
 
+########################################################################################################################
+
 class Signup(BlogHandler):
 
     def get(self):
@@ -233,6 +246,7 @@ class Signup(BlogHandler):
     def done(self, *a, **kw):
         raise NotImplementedError
 
+########################################################################################################################
 
 class Register(Signup):
 
@@ -249,6 +263,7 @@ class Register(Signup):
             self.login(u)
             self.redirect('/blog')
 
+########################################################################################################################
 
 class Login(BlogHandler):
 
@@ -262,25 +277,30 @@ class Login(BlogHandler):
         u = User.login(username, password)
         if u:
             self.login(u)
-            self.redirect('/unit3/welcome')
+            self.redirect('/login/welcome')
         else:
             msg = 'Invalid login'
             self.render('login-form.html', error = msg)
 
+########################################################################################################################
 
 class Logout(BlogHandler):
+
     def get(self):
         self.logout()
         self.redirect('/signup')
 
+########################################################################################################################
+
 class Unit3Welcome(BlogHandler):
+
     def get(self):
         if self.user:
             self.render('welcome.html', username = self.user.name)
         else:
             self.redirect('/signup')
 
-
+########################################################################################################################
 
 class MyProfile(BlogHandler):
 
@@ -288,6 +308,7 @@ class MyProfile(BlogHandler):
         if self.user:
             self.render('welcome.html', username = self.user.name)
 
+########################################################################################################################
 
 class Welcome(BlogHandler):
 
@@ -298,6 +319,7 @@ class Welcome(BlogHandler):
         else:
             self.redirect('/signup')
 
+########################################################################################################################
 
 class MyPosts(BlogHandler):
 
@@ -305,6 +327,14 @@ class MyPosts(BlogHandler):
         username = self.user.name
         posts = db.GqlQuery("SELECT * FROM Post where author = :author", author=username)
         self.render('myposts.html', username = self.user.name, posts = posts)
+
+########################################################################################################################
+
+class DeletePost(BlogHandler):
+
+    def get(self, post):
+        self.render('deletepost.html')
+
 
 
 
@@ -316,11 +346,12 @@ app = webapp2.WSGIApplication  ([('/', MainPage),
 
                                ('/blog/?', BlogFront),
                                ('/post/([0-9]+)', PostPage),
+                               ('/post/([0-9]+)/deletepost', DeletePost),###############################################
                                ('/post/newpost', NewPost),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
-                               ('/welcome', Unit3Welcome),
+                               ('/login/welcome', Unit3Welcome),
                                ('/welcome/myposts', MyPosts),
                                ('/myprofile', MyProfile),
 
