@@ -320,9 +320,11 @@ app = webapp2.WSGIApplication  ([('/', MainPage),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
-                               ('/unit3/welcome', Unit3Welcome),
-                               ('/unit3/welcome/myposts', MyPosts),
-                               ('/unit3/myprofile', MyProfile),
+                               ('/welcome', Unit3Welcome),
+                               ('/welcome/myposts', MyPosts),
+                               ('/myprofile', MyProfile),
 
                                ],
                               debug=True)
+
+

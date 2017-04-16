@@ -32,7 +32,9 @@ body {
   text-decoration: none;
 }
 
-.post-link{
+
+
+.new-post-link {
   color: #7d97ad;
   text-decoration: none;
 }
@@ -153,7 +155,7 @@ input[type=submit] {
 .LikeButton {
   position: absolute;
   right: 250px;
-  bottom: 0;
+  bottom: 0px;
   color: #7d97ad;
   text-decoration: none;
   font-size: 26px;
@@ -162,7 +164,7 @@ input[type=submit] {
 .DislikeButton {
   position: absolute;
   right: 200px;
-  bottom: 0;
+  bottom: 0px;
   color: #7d97ad;
   text-decoration: none;
   font-size: 26px;
@@ -171,10 +173,22 @@ input[type=submit] {
 .DeleteButton {
     position: absolute;
     right: 150px;
-    bottom: 0;
+    bottom: 0px;
     color: #7d97ad;
     text-decoration: none;
     font-size: 18px;
     color: red;
     padding-bottom: 0.5%;
+}
+
+
+
+.post-link {
+  position: absolute;
+  right: 300px;
+  bottom: 0px;
+  text-decoration: none;
+  font-size: 14px;
+  color: #7d97ad;
+  text-decoration: none;
 }

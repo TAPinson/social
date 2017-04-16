@@ -1,26 +1,25 @@
+
+{% block content %}
 <div class="post">
   <div class="post-heading">
     <div class="post-title">
-
       {{p.subject}}
     </div>
-
     <div class="post-date">
       {{p.created.strftime("%b %d, %Y")}} | {{p.author}}
     </div>
-
-
-
-
-
   <div class="post-content">
     {{p._render_text}}
     <p>
 
-      <form class="post-options">
         <a href="" class="LikeButton">🖒</a>
         <a href="" class="DislikeButton">🖓</a>
-        <a href="/unit3/welcome/myposts/deletepost" class="DeleteButton">🗵</a>
-      </form>
+        <a href="" class=DeleteButton>🗵</a>
+        <a href="/blog/{{p.key().id()}}" class="post-link">Go</a>
   </div>
+  <div class="postID">Post ID: {{p.key().id()}}</div>
 </div>
+
+
+
+{% endblock %}
