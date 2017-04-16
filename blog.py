@@ -315,8 +315,8 @@ app = webapp2.WSGIApplication  ([('/', MainPage),
 
 
                                ('/blog/?', BlogFront),
-                               ('/blog/([0-9]+)', PostPage),
-                               ('/blog/newpost', NewPost),
+                               ('/post/([0-9]+)', PostPage),
+                               ('/post/newpost', NewPost),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
