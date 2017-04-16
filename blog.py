@@ -188,7 +188,7 @@ class NewPost(BlogHandler):
         if subject and content:
             p = Post(parent = blog_key(), subject = subject, content = content, author = author)
             p.put()
-            self.redirect('/blog/%s' % str(p.key().id()))
+            self.redirect('/post/%s' % str(p.key().id()))
         else:
             error = "subject and content, please!"
             self.render("newpost.html", subject=subject, content=content, error=error)
@@ -351,8 +351,9 @@ app = webapp2.WSGIApplication  ([('/', MainPage),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
-                               ('/login/welcome', Unit3Welcome),
+                               ('/welcome', Unit3Welcome),
                                ('/welcome/myposts', MyPosts),
+                               ('/login/welcome', MyPosts),
                                ('/myprofile', MyProfile),
 
                                ],

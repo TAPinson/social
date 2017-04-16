@@ -154,7 +154,7 @@ input[type=submit] {
 
 .LikeButton {
   position: absolute;
-  right: 250px;
+  right: 450px;
   bottom: 0px;
   color: #7d97ad;
   text-decoration: none;
@@ -163,7 +163,7 @@ input[type=submit] {
 
 .DislikeButton {
   position: absolute;
-  right: 200px;
+  right: 400px;
   bottom: 0px;
   color: #7d97ad;
   text-decoration: none;
@@ -172,7 +172,7 @@ input[type=submit] {
 
 .DeleteButton {
     position: absolute;
-    right: 150px;
+    right: 350px;
     bottom: 0px;
     color: #7d97ad;
     text-decoration: none;
@@ -193,7 +193,7 @@ input[type=submit] {
 
 .post-link {
   position: absolute;
-  right: 300px;
+  right: 550px;
   bottom: 0px;
   text-decoration: none;
   font-size: 14px;
