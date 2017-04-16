@@ -152,6 +152,7 @@ class BlogFront(BlogHandler):
         self.render('front.html', posts = posts)
 
 ########################################################################################################################
+# Handler for retrieving a post
 
 class PostPage(BlogHandler):
 
@@ -166,6 +167,7 @@ class PostPage(BlogHandler):
         self.render("permalink.html", post = post)
 
 ########################################################################################################################
+# Handler for registering a new post
 
 class NewPost(BlogHandler):
     def get(self):
@@ -207,6 +209,7 @@ def valid_email(email):
     return not email or EMAIL_RE.match(email)
 
 ########################################################################################################################
+# Handler for registering a new user
 
 class Signup(BlogHandler):
 
@@ -247,6 +250,7 @@ class Signup(BlogHandler):
         raise NotImplementedError
 
 ########################################################################################################################
+# Handler for registering a new user
 
 class Register(Signup):
 
@@ -264,6 +268,7 @@ class Register(Signup):
             self.redirect('/blog')
 
 ########################################################################################################################
+# Handler for login requests
 
 class Login(BlogHandler):
 
@@ -283,6 +288,7 @@ class Login(BlogHandler):
             self.render('login-form.html', error = msg)
 
 ########################################################################################################################
+# Handler for logging out a signed in user
 
 class Logout(BlogHandler):
 
@@ -291,35 +297,19 @@ class Logout(BlogHandler):
         self.redirect('/signup')
 
 ########################################################################################################################
-
-class Unit3Welcome(BlogHandler):
-
-    def get(self):
-        if self.user:
-            self.render('welcome.html', username = self.user.name)
-        else:
-            self.redirect('/signup')
-
-########################################################################################################################
-
-class MyProfile(BlogHandler):
-
-    def get(self):
-        if self.user:
-            self.render('welcome.html', username = self.user.name)
-
-########################################################################################################################
+# Handler to welcome user after signing in. Doubles as profile page
 
 class Welcome(BlogHandler):
 
     def get(self):
         username = self.request.get('username')
-        if valid_username(username):
+        if self.user:
             self.render('welcome.html', username = username)
         else:
             self.redirect('/signup')
 
 ########################################################################################################################
+# Handler to view your own posts under the profile section
 
 class MyPosts(BlogHandler):
 
@@ -329,6 +319,7 @@ class MyPosts(BlogHandler):
         self.render('myposts.html', username = self.user.name, posts = posts)
 
 ########################################################################################################################
+# Handler for deleting a post
 
 class DeletePost(BlogHandler):
 
@@ -337,25 +328,19 @@ class DeletePost(BlogHandler):
 
 
 
-
-
-
+########################################################################################################################
 
 app = webapp2.WSGIApplication  ([('/', MainPage),
-
-
                                ('/blog/?', BlogFront),
                                ('/post/([0-9]+)', PostPage),
-                               ('/post/([0-9]+)/deletepost', DeletePost),###############################################
+                               ('/post/([0-9]+)/deletepost', DeletePost),
                                ('/post/newpost', NewPost),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
-                               ('/welcome', Unit3Welcome),
+                               ('/welcome', Welcome),
                                ('/welcome/myposts', MyPosts),
                                ('/login/welcome', MyPosts),
-                               ('/myprofile', MyProfile),
-
                                ],
                               debug=True)
 
