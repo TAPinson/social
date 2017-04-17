@@ -12,7 +12,7 @@
     {{p._render_text}}
     <p>
 
-        <a href="/post/{{p.key().id()}}/likes" class="LikeButton">🖒</a>
+        <a href="/post/{{p.key().id()}}/likes" class="LikeButton">🖒{{p.likes}}</a>
         <a href="/post/{{p.key().id()}}/deletepost" class="DeleteButton">🗵</a>
         <a href="/post/{{p.key().id()}}" class="post-link">Go</a>
   </div>

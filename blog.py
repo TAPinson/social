@@ -142,7 +142,7 @@ class Post(db.Model):
     created = db.DateTimeProperty(auto_now_add = True)
     last_modified = db.DateTimeProperty(auto_now = True)
     author = db.StringProperty(required=True)
-    likes = db.StringProperty(required=True)
+    likes = db.IntegerProperty(required=True)
 
     def render(self):
         self._render_text = self.content.replace('\n', '<br>')
@@ -186,13 +186,13 @@ class NewPost(BlogHandler):
         subject = self.request.get('subject')
         content = self.request.get('content')
         author = self.request.get('author')
-        likes = self.request.get('likes')
+        likes = 0
 
 
         ### THIS IS THE SECTION OF THE FUNCTION THAT ACTUALLY ADDS THE POST TO THE GQL LIBRARY ###
         ### THIS IS THE GQL ###
         if subject and content:
-            p = Post(parent = blog_key(), subject = subject, content = content, author = author, likes = likes)
+            p = Post(parent = blog_key(), subject = subject, content = content, author = author, likes = 0)
             p.put()
             self.redirect('/post/%s' % str(p.key().id()))
         else:
@@ -331,14 +331,18 @@ class DeletePost(BlogHandler):
 
 
 # Handler for liking a post ############################################################################################
+
 class LikePost(BlogHandler):
+    #def get(self, blog):
+     #   self.render('likes.html')
 
-    def get(self, blog):
-        self.render('likes.html')
+    def get(self, post_id):
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+        post.likes += 1
+        post.put()
+        self.redirect("/blog")
 
-    def post(self, likes):
-        key = db.likes
-        print key
 
 
 
