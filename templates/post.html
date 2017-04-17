@@ -12,14 +12,11 @@
     {{p._render_text}}
     <p>
 
-        <a href="" class="LikeButton">🖒</a>
-        <a href="" class="DislikeButton">🖓</a>
-        <a href="/post/{{p.key().id()}}/deletepost" class=DeleteButton>🗵</a>
+        <a href="/post/{{p.key().id()}}/likes" class="LikeButton">🖒</a>
+        <a href="/post/{{p.key().id()}}/deletepost" class="DeleteButton">🗵</a>
         <a href="/post/{{p.key().id()}}" class="post-link">Go</a>
   </div>
-  <div class="postID">Post ID: {{p.key().id()}}</div>
+  <div class="postID">Post ID: {{p.key().id()}}</div> <!-- for testing -->
 </div>
-
-
 
 {% endblock %}
