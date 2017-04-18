@@ -75,7 +75,7 @@ def render_post(response, post):
     response.out.write(post.content)
     response.out.write(post.name)
     response.out.write(post.id)
-    response.out.write(comments.comments)
+   # response.out.write(comments.comments)
 
 ########################################################################################################################
 
@@ -163,6 +163,7 @@ class BlogFront(BlogHandler):
 class PostPage(BlogHandler):
 
     def get(self, post_id):
+        p = self
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
 
@@ -188,13 +189,13 @@ class NewPost(BlogHandler):
         subject = self.request.get('subject')
         content = self.request.get('content')
         author = self.request.get('author')
-        comments = self.request.get('comments')
+        comment = self.request.get('comment')
 
 
         ### THIS IS THE SECTION OF THE FUNCTION THAT ACTUALLY ADDS THE POST TO THE GQL LIBRARY ###
         ### THIS IS THE GQL ###
         if subject and content:
-            p = Post(parent = blog_key(), subject = subject, content = content, author = author, likes = 0, comments = comments)
+            p = Post(parent = blog_key(), subject = subject, content = content, author = author, likes = 0, comment = comment)
             p.put()
             self.redirect('/post/%s' % str(p.key().id()))
         else:
@@ -353,7 +354,7 @@ class LikePost(BlogHandler):
 class Comment(db.Model):
 
     post = db.StringProperty(required=True)
-    comment = db.TextProperty(required=True)
+    comment = db.StringProperty(required=True)
     author = db.StringProperty(required=True)
 
 
@@ -365,31 +366,28 @@ class NewComment(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         subject = post.subject
         content = post.content
-        self.render('comment.html')
-        #self.render('comment.html', subject=subject, content=content, pkey=post.key())
+        #self.render('post.html', p = post)
+        self.render('comment.html', subject=subject, content=content, pkey=post.key())
 
+########################################################################################################################
+########################################################################################################################
 
     def post(self, post_id):
-
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
         comment = self.request.get('comment')
+        author = self.user.name
         if comment:
-            author = self.request.get('author')
-            c = Comment(comment=comment, post=post_id, parent=self.user.key(), author=author)
+            c = Comment(post=post_id, comment = comment, parent=self.user.key(), author=author)
             c.put()
-            self.render('viewcomments.html')
+            self.redirect('/post/%s' % str(post_id))
 
 class CommentsView(BlogHandler):
 
-    def get(self):
+    def get(self, post_id, comments):
         username = self.user.name
         posts = db.GqlQuery("SELECT * FROM Comment where post = :post", post=self)
-        self.render('viewcomments.html', posts = posts)
-
-    #def post(self):
-
-
+        self.render('viewcomments.html', posts = posts, comments = comments)
 
 #    def post(self, comments):
 #        #comments = self.request.get('comments')

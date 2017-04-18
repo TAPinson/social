@@ -5,18 +5,22 @@ comment.html
 
 <form method="post" class="comment-area">
 
+  <div>New Comment for <a href="/blog/{{pkey.id()}}">{{subject}}</a></div>
+      <p>{{content}}</p>
+
 <input type="hidden" value="{{author}}">
-<input type="hidden" value="{{post}}">
-<textarea class ="comment-area" value="{{content}}"></textarea>
+
+
+<label>
+  <div>comment</div>
+  <textarea name="comment">{{comment}}</textarea>
+</label>
 
 <p>
 <input type="submit" class="comment-submit">
 </form>
 
-{% for p in posts %}
-  {{ p.render() | safe }}
-  <br><br>
-{% endfor %}
+
 
 
 {% endblock %}
