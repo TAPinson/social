@@ -1,5 +1,4 @@
 
-{% block content %}
 <div class="post">
   <div class="post-heading">
     <div class="post-title">
@@ -15,8 +14,7 @@
         <a href="/post/{{p.key().id()}}/likes" class="LikeButton">🖒{{p.likes}}</a>
         <a href="/post/{{p.key().id()}}/deletepost" class="DeleteButton">🗵</a>
         <a href="/post/{{p.key().id()}}" class="post-link">Go</a>
+        <a href="/post/{{p.key().id()}}/comment" class="comment-link">Comment</a>
   </div>
-  <div class="postID">Post ID: {{p.key().id()}}</div> <!-- for testing -->
+<!--  <div class="postID">Post ID: {{p.key().id()}}</div>  for testing -->
 </div>
-
-{% endblock %}

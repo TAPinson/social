@@ -1,13 +1,22 @@
-
-{% extends post.html %}
+{% extends "base.html" %}
 {% block content %}
+comment.html
 
 
+<form method="post" class="comment-area">
 
+<input type="hidden" value="{{author}}">
+<input type="hidden" value="{{post}}">
+<textarea class ="comment-area" value="{{content}}"></textarea>
 
+<p>
+<input type="submit" class="comment-submit">
+</form>
 
+{% for p in posts %}
+  {{ p.render() | safe }}
+  <br><br>
+{% endfor %}
 
-
-<textarea class="comment-area">text</textarea>
 
 {% endblock %}

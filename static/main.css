@@ -136,7 +136,7 @@ input[type=submit] {
 }
 
 .post-content {
-    margin-top: 5px;
+    margin-bottom: 100px;
     color: #7d97ad;
 }
 
@@ -201,9 +201,7 @@ input[type=submit] {
   text-decoration: none;
 }
 
-.comment-area {
-  margin-top: 5%;
-}
+
 
 .user-posts {
   color: #7d97ad;
@@ -217,4 +215,20 @@ input[type=submit] {
 
 .confirmlikebutton {
   margin-left: 10%;
+}
+
+.comment-link {
+  color: #7d97ad;
+  text-decoration: none;
+  position: absolute;
+  bottom: 0;
+  right: 250px;
+}
+
+.comment-area {
+  margin-top: 5%;
+}
+
+.comment-area {
+  margin-left: 19%;
 }

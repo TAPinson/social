@@ -67,7 +67,7 @@ class BlogHandler(webapp2.RequestHandler):
         uid = self.read_secure_cookie('user_id')
         self.user = uid and User.by_id(int(uid))
 
-# Function for the structuring of posts when rendering##################################################################
+# Function for the structuring of posts when rendering #################################################################
 
 
 def render_post(response, post):
@@ -75,6 +75,7 @@ def render_post(response, post):
     response.out.write(post.content)
     response.out.write(post.name)
     response.out.write(post.id)
+    response.out.write(comments.comments)
 
 ########################################################################################################################
 
@@ -144,6 +145,7 @@ class Post(db.Model):
     author = db.StringProperty(required=True)
     likes = db.IntegerProperty(required=True)
 
+
     def render(self):
         self._render_text = self.content.replace('\n', '<br>')
         return render_str("post.html", p = self)
@@ -186,13 +188,13 @@ class NewPost(BlogHandler):
         subject = self.request.get('subject')
         content = self.request.get('content')
         author = self.request.get('author')
-        likes = 0
+        comments = self.request.get('comments')
 
 
         ### THIS IS THE SECTION OF THE FUNCTION THAT ACTUALLY ADDS THE POST TO THE GQL LIBRARY ###
         ### THIS IS THE GQL ###
         if subject and content:
-            p = Post(parent = blog_key(), subject = subject, content = content, author = author, likes = 0)
+            p = Post(parent = blog_key(), subject = subject, content = content, author = author, likes = 0, comments = comments)
             p.put()
             self.redirect('/post/%s' % str(p.key().id()))
         else:
@@ -343,7 +345,60 @@ class LikePost(BlogHandler):
         post.put()
         self.redirect("/blog")
 
+# Handler for Commenting on a post #####################################################################################
 
+#class CommentPost(BlogHandler):
+
+
+class Comment(db.Model):
+
+    post = db.StringProperty(required=True)
+    comment = db.TextProperty(required=True)
+    author = db.StringProperty(required=True)
+
+
+
+
+class NewComment(BlogHandler):
+
+    def get(self, post_id):
+        post = Post.get_by_id(int(post_id), parent=blog_key())
+        subject = post.subject
+        content = post.content
+        self.render('comment.html')
+        #self.render('comment.html', subject=subject, content=content, pkey=post.key())
+
+
+    def post(self, post_id):
+
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+        comment = self.request.get('comment')
+        if comment:
+            author = self.request.get('author')
+            c = Comment(comment=comment, post=post_id, parent=self.user.key(), author=author)
+            c.put()
+            self.render('viewcomments.html')
+
+class CommentsView(BlogHandler):
+
+    def get(self):
+        username = self.user.name
+        posts = db.GqlQuery("SELECT * FROM Comment where post = :post", post=self)
+        self.render('viewcomments.html', posts = posts)
+
+    #def post(self):
+
+
+
+#    def post(self, comments):
+#        #comments = self.request.get('comments')
+#        commentauthor = self.user.name
+#        subject = "repl"
+#        content = " "
+#        likes = 0
+#        p = Post(parent=blog_key(), content = content, author = commentauthor, subject = subject, comments = content, likes = likes)
+#        p.put()
 
 
 
@@ -352,6 +407,8 @@ class LikePost(BlogHandler):
 app = webapp2.WSGIApplication  ([('/', MainPage),
                                ('/blog/?', BlogFront),
                                ('/post/([0-9]+)', PostPage),
+                               ('/post/([0-9]+)/comments', CommentsView),
+                               ('/post/([0-9]+)/comment', NewComment),#
                                ('/post/([0-9]+)/deletepost', DeletePost),
                                ('/post/([0-9]+)/likes', LikePost),
                                ('/post/newpost', NewPost),
