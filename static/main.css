@@ -9,14 +9,55 @@ body {
     color: #7d97ad;
 }
 
-.main-title {
-    display: block;
-    color: #7d97ad;
-    font-size: 40px;
+
+.confirmlikeform {
+  margin-left: 37%;
+}
+
+.confirmlikebutton {
+  margin-left: 10%;
+}
+
+.comment-box {
+  margin-left: 5%;
+  margin-top: 5%;
+}
+
+.comment-link {
+  color: #7d97ad;
+  text-decoration: none;
+  position: absolute;
+  bottom: 0;
+  right: 250px;
+}
+
+.comment-area {
+  margin-top: 5%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.comment-divider {
+  border-style: solid;
+  height: 1px;
+  background-color: #666;
+  color: #666;
+}
+
+.confirmdeleteform {
+  margin-top: 5%;
+  margin-left: 22%;
+}
+
+h2 {
+    font-size: 24px;
     font-weight: bold;
-    text-align: center;
-    margin-bottom: 30px;
-    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+.home-link {
+  color: #7d97ad;
+  text-decoration: none;
 }
 
 .login-area {
@@ -25,23 +66,6 @@ body {
     position: absolute;
     top: 10px;
     right: 10px;
-}
-
-.home-link {
-  color: #7d97ad;
-  text-decoration: none;
-}
-
-
-
-.new-post-link {
-  color: #7d97ad;
-  text-decoration: none;
-}
-
-.profile-link{
-  color: #7d97ad;
-  text-decoration: none;
 }
 
 .login-link {
@@ -53,6 +77,25 @@ body {
     text-decoration: underline;
 }
 
+.main-title {
+    display: block;
+    color: #7d97ad;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+    text-decoration: none;
+}
+
+.new-post-link {
+  color: #7d97ad;
+  text-decoration: none;
+}
+
+
+
+
+
 .page-divider {
   border-style: solid;
   height: 1px;
@@ -60,11 +103,13 @@ body {
   color: #666;
 }
 
-h2 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
+
+.profile-link{
+  color: #7d97ad;
+  text-decoration: none;
 }
+
+
 
 .error {
     color: red;
@@ -181,10 +226,7 @@ input[type=submit] {
     padding-bottom: 0.5%;
 }
 
-.confirmdeleteform {
-  margin-top: 5%;
-  margin-left: 22%;
-}
+
 
 .confirmdeletebutton {
   margin-top: 5%;
@@ -209,26 +251,9 @@ input[type=submit] {
   font-size: 26px;
 }
 
-.confirmlikeform {
-  margin-left: 37%;
-}
-
-.confirmlikebutton {
-  margin-left: 10%;
-}
-
-.comment-link {
+.user-comments {
   color: #7d97ad;
-  text-decoration: none;
-  position: absolute;
-  bottom: 0;
-  right: 250px;
-}
-
-.comment-area {
-  margin-top: 5%;
-}
-
-.comment-area {
-  margin-left: 19%;
+  text-decoration: underline;
+  font-size: 26px;
+  margin-left: 25px;
 }

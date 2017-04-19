@@ -1,26 +1,52 @@
 {% extends "base.html" %}
-{% block content %}
-comment.html
 
+{% block content %}
 
 <form method="post" class="comment-area">
-
-  <div>New Comment for <a href="/blog/{{pkey.id()}}">{{subject}}</a></div>
+  <input type="hidden" value="{{author}}">
+  <div>
+    <p>
+       <h2>{{subject}}</h2></div>
       <p>{{content}}</p>
 
-<input type="hidden" value="{{author}}">
+
+
+    <div class="comment-count">
+      <span>{{post.comments.count()}} comments</span>
+    </div>
+    <hr class="page-divider">
+    <div class="post-comments">
+        {% for c in post.comments %}
+
+        <div class="comment-display">
+
+            <div class="comment-author">{{ c.parent().name }} says:</div>
+            <p class="comment-content">{{ c.comment }}</p>
+            <hr class="comment-divider">
+            {% if user.name == c.author %}
+      <!--
+      need to add updatecomment and deletecomment functions
+           <a href="/blog/{{post.key().id()}}/updatecomment/{{c.key().id()}}">update</a>
+            <span class="separator"> | </span>
+            <a href="/blog/{{post.key().id()}}/deletecomment/{{c.key().id()}}">delete</a> -->
+            {% endif %}
+        </div>
+
+        {% endfor %}
+
+
+
+
+
 
 
 <label>
-  <div>comment</div>
-  <textarea name="comment">{{comment}}</textarea>
+  <div class="comment-box"> <textarea name="comment">{{comment}}</textarea></div>
 </label>
-
-<p>
 <input type="submit" class="comment-submit">
 </form>
 
 
 
-
+comment.html
 {% endblock %}
