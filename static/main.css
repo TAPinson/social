@@ -187,8 +187,8 @@ input[type=submit] {
 
 .post-date {
     position: absolute;
-    right: 0;
-    bottom: 0;
+    right: 10px;
+    bottom: 0px;
     color: #7d97ad;
 }
 
@@ -196,6 +196,8 @@ input[type=submit] {
   margin-top: 5%;
   font-size: 18px;
 }
+
+
 
 .LikeButton {
   position: absolute;
@@ -226,7 +228,10 @@ input[type=submit] {
     padding-bottom: 0.5%;
 }
 
-
+.comment-user-options {
+  color: #7d97ad;
+  text-decoration: none;
+}
 
 .confirmdeletebutton {
   margin-top: 5%;
@@ -243,7 +248,16 @@ input[type=submit] {
   text-decoration: none;
 }
 
+.comment-confirmed-delete {
 
+  color: #7d97ad;
+  text-decoration: none;
+}
+
+.comment-confirmed-edit {
+  color: #7d97ad;
+  text-decoration: none;
+}
 
 .user-posts {
   color: #7d97ad;
@@ -251,7 +265,7 @@ input[type=submit] {
   font-size: 26px;
 }
 
-.user-comments {
+.continue-link {
   color: #7d97ad;
   text-decoration: underline;
   font-size: 26px;

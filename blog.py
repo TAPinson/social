@@ -67,23 +67,28 @@ class BlogHandler(webapp2.RequestHandler):
         uid = self.read_secure_cookie('user_id')
         self.user = uid and User.by_id(int(uid))
 
-# Function for the structuring of posts when rendering #################################################################
+# Function for redirecting to /blog#################################################################
 
+class MainPage(BlogHandler):
+    def get(self):
+        self.redirect('/blog')
 
 def render_post(response, post):
     response.out.write('<b>' + post.subject + '</b><br>')
     response.out.write(post.content)
     response.out.write(post.name)
     response.out.write(post.id)
-   # response.out.write(comments.comments)
 
-########################################################################################################################
+def render_comment(response, comment):
+    response.out.write(comment.author)
+    response.out.write(comment.comment)
+    response.out.write(comment.post)
 
-class MainPage(BlogHandler):
-    def get(self):
-        self.redirect('/blog')
 
-# Functions used for login username and password ########################################################################
+
+
+
+# Functions used for login username and password #######################################################################
 
 
 def make_salt(length = 5):
@@ -150,6 +155,11 @@ class Post(db.Model):
         self._render_text = self.content.replace('\n', '<br>')
         return render_str("post.html", p = self)
 
+    @property
+    def comments(self):
+        return Comment.all().filter("post = ", str(self.key().id()))
+
+
 #Handler for blog homepage##############################################################################################
 
 class BlogFront(BlogHandler):
@@ -166,6 +176,7 @@ class PostPage(BlogHandler):
         p = self
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
+
 
         if not post:
             self.error(404)
@@ -189,13 +200,13 @@ class NewPost(BlogHandler):
         subject = self.request.get('subject')
         content = self.request.get('content')
         author = self.request.get('author')
-        comment = self.request.get('comment')
+
 
 
         ### THIS IS THE SECTION OF THE FUNCTION THAT ACTUALLY ADDS THE POST TO THE GQL LIBRARY ###
         ### THIS IS THE GQL ###
         if subject and content:
-            p = Post(parent = blog_key(), subject = subject, content = content, author = author, likes = 0, comment = comment)
+            p = Post(parent = blog_key(), subject = subject, content = content, author = author, likes = 0)
             p.put()
             self.redirect('/post/%s' % str(p.key().id()))
         else:
@@ -287,7 +298,7 @@ class Login(BlogHandler):
         u = User.login(username, password)
         if u:
             self.login(u)
-            self.redirect('/login/welcome')
+            self.redirect('/welcome')
         else:
             msg = 'Invalid login'
             self.render('login-form.html', error = msg)
@@ -307,7 +318,7 @@ class Welcome(BlogHandler):
     def get(self):
         username = self.request.get('username')
         if self.user:
-            self.render('welcome.html', username = username)
+            self.render('welcome.html', username = self.user.name)
         else:
             self.redirect('/signup')
 
@@ -352,11 +363,13 @@ class LikePost(BlogHandler):
 
 
 class Comment(db.Model):
-
     post = db.StringProperty(required=True)
     comment = db.StringProperty(required=True)
     author = db.StringProperty(required=True)
 
+    @classmethod
+    def render(self):
+        self.render("comment.html")
 
 
 
@@ -367,7 +380,7 @@ class NewComment(BlogHandler):
         subject = post.subject
         content = post.content
         #self.render('post.html', p = post)
-        self.render('comment.html', subject=subject, content=content, pkey=post.key())
+        self.render('comment.html', subject=subject, post = post, content=content, pkey=post.key())
 
 ########################################################################################################################
 ########################################################################################################################
@@ -380,23 +393,31 @@ class NewComment(BlogHandler):
         if comment:
             c = Comment(post=post_id, comment = comment, parent=self.user.key(), author=author)
             c.put()
-            self.redirect('/post/%s' % str(post_id))
+            self.redirect('/blog')
+            #self.render('comment.html', subject = post.subject, post = post, username = author, comment = comment, pkey=post.key())
+            #self.redirect('/post/%s' % str(post_id) + '/content')
 
 class CommentsView(BlogHandler):
 
-    def get(self, post_id, comments):
-        username = self.user.name
-        posts = db.GqlQuery("SELECT * FROM Comment where post = :post", post=self)
-        self.render('viewcomments.html', posts = posts, comments = comments)
+    def get(self, comment):
+        comments = db.GqlQuery("SELECT * FROM Comment where author = :author", author = self.user.name)
+        self.render('viewcomments.html', username = self.user.name, comment = comment.comment)
 
-#    def post(self, comments):
-#        #comments = self.request.get('comments')
-#        commentauthor = self.user.name
-#        subject = "repl"
-#        content = " "
-#        likes = 0
-#        p = Post(parent=blog_key(), content = content, author = commentauthor, subject = subject, comments = content, likes = likes)
-#        p.put()
+########################################################################################################################
+class DeleteComment(BlogHandler):
+
+    def get(self, post_id):
+        commentToDelete = db.GqlQuery("SELECT * FROM Comment WHERE post= :post", post = post_id)
+        comment = commentToDelete[0];
+        comment.delete()
+        self.redirect('/blog')
+
+
+
+   # def post(self, post):
+   #     key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+   #     db.delete(key)
+   #     self.redirect('/')
 
 
 
@@ -408,6 +429,7 @@ app = webapp2.WSGIApplication  ([('/', MainPage),
                                ('/post/([0-9]+)/comments', CommentsView),
                                ('/post/([0-9]+)/comment', NewComment),#
                                ('/post/([0-9]+)/deletepost', DeletePost),
+                               ('/post/([0-9]+)/deletecomment', DeleteComment),
                                ('/post/([0-9]+)/likes', LikePost),
                                ('/post/newpost', NewPost),
                                ('/signup', Register),
@@ -415,7 +437,8 @@ app = webapp2.WSGIApplication  ([('/', MainPage),
                                ('/logout', Logout),
                                ('/welcome', Welcome),
                                ('/welcome/myposts', MyPosts),
-                               ('/login/welcome', MyPosts),
+                               ('/welcome/mycomments', CommentsView),
+                               ('/welcome/myposts', MyPosts),
                                ],
                               debug=True)
 

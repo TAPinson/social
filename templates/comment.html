@@ -22,14 +22,16 @@
 
             <div class="comment-author">{{ c.parent().name }} says:</div>
             <p class="comment-content">{{ c.comment }}</p>
+
+          <div class="confirmed-comment-options">
+            <a class="comment-confirmed-delete" href="/post/{{post.key().id()}}/deletecomment">delete</a>
+            |
+            <a class="comment-confirmed-edit" href="/blog/{{post.key().id()}}/updatecomment/{{c.key().id()}}">update</a>
+          </div>
             <hr class="comment-divider">
-            {% if user.name == c.author %}
+
       <!--
-      need to add updatecomment and deletecomment functions
-           <a href="/blog/{{post.key().id()}}/updatecomment/{{c.key().id()}}">update</a>
-            <span class="separator"> | </span>
-            <a href="/blog/{{post.key().id()}}/deletecomment/{{c.key().id()}}">delete</a> -->
-            {% endif %}
+      need to add update-comment and delete-comment functions-->
         </div>
 
         {% endfor %}
@@ -48,5 +50,5 @@
 
 
 
-comment.html
+
 {% endblock %}
