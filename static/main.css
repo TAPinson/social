@@ -92,7 +92,9 @@ h2 {
   text-decoration: none;
 }
 
-
+.postToEdit {
+  font-style: italic;
+}
 
 
 
@@ -197,6 +199,13 @@ input[type=submit] {
   font-size: 18px;
 }
 
+.EditPostButton {
+  position: absolute;
+  right: 550px;
+  bottom: 0px;
+  color: #7d97ad;
+  text-decoration: none;
+}
 
 
 .LikeButton {

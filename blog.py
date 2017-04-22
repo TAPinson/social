@@ -32,6 +32,7 @@ def check_secure_val(secure_val):
     if secure_val == make_secure_val(val):
         return val
 
+
 # Base Blog Handler ####################################################################################################
 
 class BlogHandler(webapp2.RequestHandler):
@@ -67,6 +68,7 @@ class BlogHandler(webapp2.RequestHandler):
         uid = self.read_secure_cookie('user_id')
         self.user = uid and User.by_id(int(uid))
 
+
 # Function for redirecting to /blog#################################################################
 
 class MainPage(BlogHandler):
@@ -85,11 +87,7 @@ def render_comment(response, comment):
     response.out.write(comment.post)
 
 
-
-
-
 # Functions used for login username and password #######################################################################
-
 
 def make_salt(length = 5):
     return ''.join(random.choice(letters) for x in xrange(length))
@@ -106,6 +104,7 @@ def valid_pw(name, password, h):
 
 def users_key(group = 'default'):
     return db.Key.from_path('users', group)
+
 
 # Model for the User table in Gql. Stores name, pw_hash, email##########################################################
 
@@ -140,6 +139,7 @@ class User(db.Model):
 def blog_key(name = 'default'):
     return db.Key.from_path('blogs', name)
 
+
 # Defines the contents of a post: subject, content, created, last_modified, and author##################################
 
 class Post(db.Model):
@@ -149,7 +149,6 @@ class Post(db.Model):
     last_modified = db.DateTimeProperty(auto_now = True)
     author = db.StringProperty(required=True)
     likes = db.IntegerProperty(required=True)
-
 
     def render(self):
         self._render_text = self.content.replace('\n', '<br>')
@@ -166,7 +165,9 @@ class BlogFront(BlogHandler):
 
     def get(self):
         posts = db.GqlQuery("select * from Post order by created desc")
+
         self.render('front.html', posts = posts)
+
 
 # Handler for retrieving a post#########################################################################################
 
@@ -176,13 +177,11 @@ class PostPage(BlogHandler):
         p = self
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
-
-
         if not post:
             self.error(404)
             return
-
         self.render("permalink.html", post = post)
+
 
 # Handler for registering a new post####################################################################################
 
@@ -200,11 +199,6 @@ class NewPost(BlogHandler):
         subject = self.request.get('subject')
         content = self.request.get('content')
         author = self.request.get('author')
-
-
-
-        ### THIS IS THE SECTION OF THE FUNCTION THAT ACTUALLY ADDS THE POST TO THE GQL LIBRARY ###
-        ### THIS IS THE GQL ###
         if subject and content:
             p = Post(parent = blog_key(), subject = subject, content = content, author = author, likes = 0)
             p.put()
@@ -212,7 +206,6 @@ class NewPost(BlogHandler):
         else:
             error = "subject and content, please!"
             self.render("newpost.html", subject=subject, content=content, error=error)
-
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
@@ -267,6 +260,7 @@ class Signup(BlogHandler):
     def done(self, *a, **kw):
         raise NotImplementedError
 
+
 ########################################## Handler for registering a new user ##########################################
 
 class Register(Signup):
@@ -283,6 +277,7 @@ class Register(Signup):
 
             self.login(u)
             self.redirect('/blog')
+
 
 ############################################# Handler for login requests ###############################################
 
@@ -303,6 +298,7 @@ class Login(BlogHandler):
             msg = 'Invalid login'
             self.render('login-form.html', error = msg)
 
+
 ########################################### Handler for logging out a signed in user ###################################
 
 class Logout(BlogHandler):
@@ -310,6 +306,7 @@ class Logout(BlogHandler):
     def get(self):
         self.logout()
         self.redirect('/signup')
+
 
 # Handler to welcome user after signing in. Doubles as profile page#####################################################
 
@@ -322,6 +319,7 @@ class Welcome(BlogHandler):
         else:
             self.redirect('/signup')
 
+
 # Handler to view your own posts under the profile section##############################################################
 
 class MyPosts(BlogHandler):
@@ -330,6 +328,7 @@ class MyPosts(BlogHandler):
         username = self.user.name
         posts = db.GqlQuery("SELECT * FROM Post where author = :author", author=username)
         self.render('myposts.html', username = self.user.name, posts = posts)
+
 
 # Handler for deleting a post###########################################################################################
 
@@ -371,10 +370,9 @@ class NewComment(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         subject = post.subject
         content = post.content
+        #postauthor = post.author
         #self.render('post.html', p = post)
-        self.render('comment.html', subject=subject, post = post, content=content, pkey=post.key())
-
-
+        self.render('comment.html', subject=subject, post = post, content=content, postuser = post.author, pkey=post.key())
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
@@ -387,7 +385,7 @@ class NewComment(BlogHandler):
             self.redirect('/blog')
 
 
-########################################################################################################################
+# Handler for deleting a comment #######################################################################################
 
 class DeleteComment(BlogHandler):
 
@@ -397,6 +395,16 @@ class DeleteComment(BlogHandler):
         comment.delete()
         self.redirect('/blog')
 
+# Handler for editing a post ##########################################################################################
+
+class EditPost(BlogHandler):
+
+    def get(self,post_id):
+        post = Post.get_by_id(int(post_id), parent=blog_key())
+        content = post.content
+        subject = post.subject
+        postToEdit = db.GqlQuery("SELECT * FROM Post WHERE post= :post", post = post_id)
+        self.render("editpost.html", content = content, post_id = post_id, subject = subject)
 
 #WSGI Mapping ##########################################################################################################
 
@@ -407,12 +415,12 @@ app = webapp2.WSGIApplication  ([('/', MainPage),
                                ('/post/([0-9]+)/deletepost', DeletePost),
                                ('/post/([0-9]+)/deletecomment', DeleteComment),
                                ('/post/([0-9]+)/likes', LikePost),
+                                 ('/post/([0-9]+)/editpost', EditPost),
                                ('/post/newpost', NewPost),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
                                ('/welcome', Welcome),
-                               ('/welcome/myposts', MyPosts),
                                ('/welcome/myposts', MyPosts),
                                ],
                               debug=True)
