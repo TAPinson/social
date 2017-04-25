@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Comments By {{username}}:</h2>
+
+
+  {% for c in comments %}
+    {{ c.render() | safe }}
+    <br><br>
+  {% endfor %}
+
+{% endblock %}

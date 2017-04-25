@@ -391,7 +391,7 @@ class DeleteComment(BlogHandler):
 
     def get(self, post_id):
         commentToDelete = db.GqlQuery("SELECT * FROM Comment WHERE post= :post", post = post_id)
-        comment = commentToDelete[0];
+        comment = commentToDelete[0]
         comment.delete()
         self.redirect('/blog')
 
@@ -405,6 +405,17 @@ class EditPost(BlogHandler):
         subject = post.subject
         postToEdit = db.GqlQuery("SELECT * FROM Post WHERE post= :post", post = post_id)
         self.render("editpost.html", content = content, post_id = post_id, subject = subject)
+
+    def post(self, post_id):
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        p = db.get(key)
+        p.content = self.request.get('content')
+        p.put()
+        self.redirect('/blog')
+
+
+
+
 
 #WSGI Mapping ##########################################################################################################
 
