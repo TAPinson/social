@@ -403,7 +403,7 @@ class EditPost(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         content = post.content
         subject = post.subject
-        postToEdit = db.GqlQuery("SELECT * FROM Post WHERE post= :post", post = post_id) #### Not sure if this line is used
+        postToEdit = db.GqlQuery("SELECT * FROM Post WHERE post= :post", post = post_id)
         self.render("editpost.html", content = content, post_id = post_id, subject = subject)
 
     def post(self, post_id):
@@ -425,9 +425,14 @@ class EditComment(BlogHandler):
         self.render('editcomment.html', subject = post.subject, content=comment.comment, comment=comment.comment)
 
     def post(self, post_id):
-        post = Post.get_by_id(int(post_id), parent=blog_key())
-        content = self.request.get('content')
-        p.put()
+        commentToDelete = db.GqlQuery("SELECT * FROM Comment WHERE post= :post", post=post_id)
+        comment = commentToDelete[0]
+        comment.delete()
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        comment = self.request.get('content')
+        author = self.user.name
+        c = Comment(post=post_id, comment=comment, parent=self.user.key(), author=author)
+        c.put()
         self.redirect('/blog')
 
 
@@ -439,7 +444,7 @@ class EditComment(BlogHandler):
 app = webapp2.WSGIApplication  ([('/', MainPage),
                                ('/blog/?', BlogFront),
                                ('/post/([0-9]+)', PostPage),
-                               ('/post/([0-9]+)/comment', NewComment),#
+                               ('/post/([0-9]+)/comment', NewComment),
                                ('/post/([0-9]+)/deletepost', DeletePost),
                                ('/post/([0-9]+)/deletecomment', DeleteComment),
                                ('/post/([0-9]+)/likes', LikePost),
