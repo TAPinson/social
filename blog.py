@@ -403,13 +403,30 @@ class EditPost(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         content = post.content
         subject = post.subject
-        postToEdit = db.GqlQuery("SELECT * FROM Post WHERE post= :post", post = post_id)
+        postToEdit = db.GqlQuery("SELECT * FROM Post WHERE post= :post", post = post_id) #### Not sure if this line is used
         self.render("editpost.html", content = content, post_id = post_id, subject = subject)
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         p = db.get(key)
         p.content = self.request.get('content')
+        p.put()
+        self.redirect('/blog')
+
+
+# Handler for editing a comment ########################################################################################
+
+class EditComment(BlogHandler):
+
+    def get(self, post_id):
+        post = Post.get_by_id(int(post_id), parent=blog_key())
+        commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE post= :post", post=post_id)
+        comment = commentToEdit[0]
+        self.render('editcomment.html', subject = post.subject, content=comment.comment, comment=comment.comment)
+
+    def post(self, post_id):
+        post = Post.get_by_id(int(post_id), parent=blog_key())
+        content = self.request.get('content')
         p.put()
         self.redirect('/blog')
 
@@ -426,7 +443,8 @@ app = webapp2.WSGIApplication  ([('/', MainPage),
                                ('/post/([0-9]+)/deletepost', DeletePost),
                                ('/post/([0-9]+)/deletecomment', DeleteComment),
                                ('/post/([0-9]+)/likes', LikePost),
-                                 ('/post/([0-9]+)/editpost', EditPost),
+                               ('/post/([0-9]+)/editpost', EditPost),
+                               ('/post/([0-9]+)/editcomment', EditComment),
                                ('/post/newpost', NewPost),
                                ('/signup', Register),
                                ('/login', Login),
