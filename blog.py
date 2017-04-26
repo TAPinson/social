@@ -360,9 +360,18 @@ class LikePost(BlogHandler):
                 post.likers = post.likers + ", " + liker
                 post.put()
                 self.redirect("/blog")
-            else:
-                error = "You can't like your own posts!"
-                self.redirect("/blog")
+            elif liker in post.likers:
+                names = post.likers
+                names = names.split()
+                print names
+                if liker in names:
+                    names.remove(liker)
+                    print names
+                    post.likes -= 1
+                    names = "".join(names)
+                    post.likers = names
+                    post.put()
+        self.redirect("/blog")
 
 
 # Handler for Commenting on a post #####################################################################################
