@@ -185,7 +185,6 @@ class PostPage(BlogHandler):
 
 # Handler for registering a new post####################################################################################
 
-
 class NewPost(BlogHandler):
     def get(self):
         if self.user:
@@ -289,7 +288,6 @@ class Login(BlogHandler):
     def post(self):
         username = self.request.get('username')
         password = self.request.get('password')
-
         u = User.login(username, password)
         if u:
             self.login(u)
@@ -334,8 +332,13 @@ class MyPosts(BlogHandler):
 
 class DeletePost(BlogHandler):
 
-    def get(self, post):
-        self.render('deletepost.html')
+    def get(self, post_id):
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+        if self.user.name == post.author:
+            self.render('deletepost.html')
+        else:
+            self.redirect('/blog')
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
@@ -346,15 +349,17 @@ class DeletePost(BlogHandler):
 # Handler for liking a post ############################################################################################
 
 class LikePost(BlogHandler):
-    #def get(self, blog):
-     #   self.render('likes.html')
 
     def get(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
-        post.likes += 1
-        post.put()
-        self.redirect("/blog")
+        if self.user.name != post.author:
+            post.likes += 1
+            post.put()
+            self.redirect("/blog")
+        else:
+            error = "You can't like your own posts!"
+            self.redirect("/blog")
 
 
 # Handler for Commenting on a post #####################################################################################
