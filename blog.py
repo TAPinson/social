@@ -418,10 +418,12 @@ class EditPost(BlogHandler):
 
     def get(self,post_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
-        content = post.content
-        subject = post.subject
-        postToEdit = db.GqlQuery("SELECT * FROM Post WHERE post= :post", post = post_id)
-        self.render("editpost.html", content = content, post_id = post_id, subject = subject)
+        if self.user.name == post.author:
+            content = post.content
+            subject = post.subject
+            self.render("editpost.html", content = content, post_id = post_id, subject = subject)
+        else:
+            self.redirect('/blog')
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
