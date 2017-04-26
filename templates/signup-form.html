@@ -8,7 +8,7 @@
     </style>
 
   <body>
-    <h2>Signup</h2>
+    <div class="signup-title"><h2>Signup for /social/</h2></div>
     <form method="post" class="signupsheet">
       <table>
         <tr>
@@ -16,7 +16,7 @@
             Username
           </td>
           <td>
-            <input type="text" name="username" value="{{username}}">
+            <input type="text" class="signup-username" name="username" value="{{username}}"><p>
           </td>
           <td class="error">
             {{error_username}}
@@ -25,10 +25,22 @@
 
         <tr>
           <td class="label">
+            Email (optional)
+          </td>
+          <td>
+            <input type="text" class="signup-email" name="email" value="{{email}}"><p>
+          </td>
+          <td class="error">
+            {{error_email}}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="label">
             Password
           </td>
           <td>
-            <input type="password" name="password" value="">
+            <input type="password" class="signup-password" name="password" value=""><p>
           </td>
           <td class="error">
             {{error_password}}
@@ -40,24 +52,14 @@
             Verify Password
           </td>
           <td>
-            <input type="password" name="verify" value="">
+            <input type="password" class="signup-password" name="verify" value=""><p>
           </td>
           <td class="error">
             {{error_verify}}
           </td>
         </tr>
 
-        <tr>
-          <td class="label">
-            Email (optional)
-          </td>
-          <td>
-            <input type="text" name="email" value="{{email}}">
-          </td>
-          <td class="error">
-            {{error_email}}
-          </td>
-        </tr>
+
       </table>
 
       <input type="submit" class="signup-submit">
