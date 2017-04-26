@@ -357,7 +357,7 @@ class LikePost(BlogHandler):
         if self.user.name != post.author:
             if liker not in post.likers:
                 post.likes += 1
-                post.likers = post.likers + ", " + liker
+                post.likers = post.likers + " " + liker
                 post.put()
                 self.redirect("/blog")
             elif liker in post.likers:
