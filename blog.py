@@ -149,6 +149,7 @@ class Post(db.Model):
     last_modified = db.DateTimeProperty(auto_now = True)
     author = db.StringProperty(required=True)
     likes = db.IntegerProperty(required=True)
+    likers = db.StringProperty(required=True)
 
     def render(self):
         self._render_text = self.content.replace('\n', '<br>')
@@ -199,7 +200,7 @@ class NewPost(BlogHandler):
         content = self.request.get('content')
         author = self.request.get('author')
         if subject and content:
-            p = Post(parent = blog_key(), subject = subject, content = content, author = author, likes = 0)
+            p = Post(parent = blog_key(), subject = subject, content = content, author = author, likes = 0, likers = "none")
             p.put()
             self.redirect('/post/%s' % str(p.key().id()))
         else:
@@ -352,13 +353,16 @@ class LikePost(BlogHandler):
     def get(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
+        liker = self.user.name
         if self.user.name != post.author:
-            post.likes += 1
-            post.put()
-            self.redirect("/blog")
-        else:
-            error = "You can't like your own posts!"
-            self.redirect("/blog")
+            if liker not in post.likers:
+                post.likes += 1
+                post.likers = post.likers + ", " + liker
+                post.put()
+                self.redirect("/blog")
+            else:
+                error = "You can't like your own posts!"
+                self.redirect("/blog")
 
 
 # Handler for Commenting on a post #####################################################################################
