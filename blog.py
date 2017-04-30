@@ -387,8 +387,6 @@ class NewComment(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         subject = post.subject
         content = post.content
-        #postauthor = post.author
-        #self.render('post.html', p = post)
         self.render('comment.html', subject=subject, post = post, content=content, postuser = post.author, pkey=post.key())
 
     def post(self, post_id):
@@ -409,8 +407,9 @@ class DeleteComment(BlogHandler):
     def get(self, post_id):
         commentToDelete = db.GqlQuery("SELECT * FROM Comment WHERE post= :post", post = post_id)
         comment = commentToDelete[0]
-        comment.delete()
-        self.redirect('/blog')
+        if comment.author == self.user.name:
+            comment.delete()
+            self.redirect('/blog')
 
 # Handler for editing a post ##########################################################################################
 
@@ -441,18 +440,23 @@ class EditComment(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE post= :post", post=post_id)
         comment = commentToEdit[0]
-        self.render('editcomment.html', subject = post.subject, content=comment.comment, comment=comment.comment)
+        print comment.author
+        if comment.author == self.user.name:
+            comment.delete()
+            self.render('editcomment.html', subject = post.subject, content=comment.comment, comment=comment.comment)
+
 
     def post(self, post_id):
-        commentToDelete = db.GqlQuery("SELECT * FROM Comment WHERE post= :post", post=post_id)
-        comment = commentToDelete[0]
-        comment.delete()
-        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-        comment = self.request.get('content')
-        author = self.user.name
-        c = Comment(post=post_id, comment=comment, parent=self.user.key(), author=author)
+        comment = self.request.get("comment")
+        c = Comment(post=post_id, comment=comment, parent=self.user.key(), author=self.user.name)
         c.put()
         self.redirect('/blog')
+        #key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        #comment = self.request.get('content')
+        #author = self.user.name
+        #c = Comment(post=post_id, comment=comment, parent=self.user.key(), author=author)
+        #c.put()
+        #self.redirect('/blog')
 
 
 
