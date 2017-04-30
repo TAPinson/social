@@ -333,12 +333,15 @@ class MyPosts(BlogHandler):
 class DeletePost(BlogHandler):
 
     def get(self, post_id):
-        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-        post = db.get(key)
-        if self.user.name == post.author:
-            self.render('deletepost.html')
-        else:
+        if not self.user:
             self.render('error.html')
+        else:
+            key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+            post = db.get(key)
+            if self.user.name == post.author:
+                self.render('deletepost.html')
+            else:
+                self.render('error.html')
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
@@ -354,27 +357,30 @@ class LikePost(BlogHandler):
     def get(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
-        liker = self.user.name
-        if self.user.name != post.author:
-            if liker not in post.likers:
-                post.likes += 1
-                post.likers = post.likers + " " + liker
-                post.put()
-                time.sleep(0.1)
-                self.redirect("/blog")
-            elif liker in post.likers:
-                names = post.likers
-                names = names.split()
-                print names
-                if liker in names:
-                    names.remove(liker)
-                    print names
-                    post.likes -= 1
-                    names = "".join(names)
-                    post.likers = names
+        if not self.user:
+            self.render('error.html')
+        else:
+            liker = self.user.name
+            if self.user.name != post.author:
+                if liker not in post.likers:
+                    post.likes += 1
+                    post.likers = post.likers + " " + liker
                     post.put()
                     time.sleep(0.1)
                     self.redirect("/blog")
+                elif liker in post.likers:
+                    names = post.likers
+                    names = names.split()
+                    print names
+                    if liker in names:
+                        names.remove(liker)
+                        print names
+                        post.likes -= 1
+                        names = "".join(names)
+                        post.likers = names
+                        post.put()
+                        time.sleep(0.1)
+                        self.redirect("/blog")
 
 
 # Handler for Commenting on a post #####################################################################################
@@ -395,27 +401,31 @@ class NewComment(BlogHandler):
     def post(self, post_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         p = post
-        author = self.user.name
-        try:
-            commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and author= :author", post=post_id,
-                                    author=author)
-            editcomment = commentToEdit[0]
-            editcomment.delete()
-            comment = self.request.get('comment')
+        if not self.user:
+            self.render('error.html')
+        else:
+
             author = self.user.name
-            c = Comment(post=post_id, comment=comment, parent=self.user.key(), author=author)
-            c.put()
-            time.sleep(0.1)
-            self.redirect(('/post/%s' % str(p.key().id())+('/comment')))
-        except IndexError:
-            key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-            post = db.get(key)
-            comment = self.request.get('comment')
-            author = self.user.name
-            if comment:
-                c = Comment(post=post_id, comment = comment, parent=self.user.key(), author=author)
+            try:
+                commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and author= :author", post=post_id,
+                                        author=author)
+                editcomment = commentToEdit[0]
+                editcomment.delete()
+                comment = self.request.get('comment')
+                author = self.user.name
+                c = Comment(post=post_id, comment=comment, parent=self.user.key(), author=author)
                 c.put()
-                self.redirect(('/post/%s' % str(p.key().id()) + ('/comment')))
+                time.sleep(0.1)
+                self.redirect(('/post/%s' % str(p.key().id())+('/comment')))
+            except IndexError:
+                key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+                post = db.get(key)
+                comment = self.request.get('comment')
+                author = self.user.name
+                if comment:
+                    c = Comment(post=post_id, comment = comment, parent=self.user.key(), author=author)
+                    c.put()
+                    self.redirect(('/post/%s' % str(p.key().id()) + ('/comment')))
 
 
 # Handler for deleting a comment #######################################################################################
@@ -423,15 +433,20 @@ class NewComment(BlogHandler):
 class DeleteComment(BlogHandler):
 
     def get(self, post_id):
-        author = self.user.name
-        try:
-            commentToDelete = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and author= :author", post = post_id, author=author)
-            comment = commentToDelete[0]
-            if comment.author == self.user.name:
-                comment.delete()
-                self.redirect('/blog')
-        except IndexError:
+        post = Post.get_by_id(int(post_id), parent=blog_key())
+        p = post
+        if not self.user:
             self.render('error.html')
+        else:
+            author = self.user.name
+            try:
+                commentToDelete = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and author= :author", post = post_id, author=author)
+                comment = commentToDelete[0]
+                if comment.author == self.user.name:
+                    comment.delete()
+                    self.redirect(('/post/%s' % str(p.key().id()) + ('/comment')))
+            except IndexError:
+                self.render('error.html')
 
 # Handler for editing a post ##########################################################################################
 
@@ -439,20 +454,26 @@ class EditPost(BlogHandler):
 
     def get(self,post_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
-        if self.user.name == post.author:
-            content = post.content
-            subject = post.subject
-            self.render("editpost.html", content = content, post_id = post_id, subject = subject)
-        else:
+        if not self.user:
             self.render('error.html')
+        else:
+            if self.user.name == post.author:
+                content = post.content
+                subject = post.subject
+                self.render("editpost.html", content = content, post_id = post_id, subject = subject)
+            else:
+                self.render('error.html')
 
     def post(self, post_id):
-        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-        p = db.get(key)
-        p.content = self.request.get('content')
-        p.put()
-        time.sleep(0.1)
-        self.redirect('/blog')
+        if not self.user:
+            self.render('error.html')
+        else:
+            key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+            p = db.get(key)
+            p.content = self.request.get('content')
+            p.put()
+            time.sleep(0.1)
+            self.redirect('/blog')
 
 
 # Handler for editing a comment ########################################################################################
@@ -461,15 +482,14 @@ class EditComment(BlogHandler):
 
     def get(self, post_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
-        author = self.user.name
-
-        commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and author= :author", post=post_id,
+        if not self.user:
+            self.render('error.html')
+        else:
+            author = self.user.name
+            commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and author= :author", post=post_id,
                                     author=author)
-        comment = commentToEdit[0]
-
-        self.render('editcomment.html', subject=post.subject, content=comment.comment, comment=comment.comment)
-
-# This works, dont touch! ^^^###########################################################################################
+            comment = commentToEdit[0]
+            self.render('editcomment.html', subject=post.subject, content=comment.comment, comment=comment.comment)
 
     def post(self, post_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
@@ -485,17 +505,6 @@ class EditComment(BlogHandler):
         time.sleep(0.1)
         self.redirect('/blog')
 
-
-
-###THIS IS THE WORKING POST FOR EDIT COMMENT. UNCOMMENT THIS TO RESTORE FUNCTIONALITY###########
-#    def post(self, post_id):                                                                     #
-#        key = db.Key.from_path('Post', int(post_id), parent=blog_key())                          #
-#        comment = self.request.get('comment')                                                    #
-#        author = self.user.name                                                                  #
-#        c = Comment(post=post_id, comment=comment, parent=self.user.key(), author=author)        #
-#        c.put()                                                                                  #
-#        self.redirect('/blog')                                                                   #
-###################################################################################################
 
 #WSGI Mapping ##########################################################################################################
 
