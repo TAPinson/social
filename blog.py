@@ -4,7 +4,7 @@ import random
 import hashlib
 import hmac
 from string import letters
-
+import time
 import webapp2
 import jinja2
 
@@ -338,11 +338,12 @@ class DeletePost(BlogHandler):
         if self.user.name == post.author:
             self.render('deletepost.html')
         else:
-            self.redirect('/blog')
+            self.render('error.html')
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         db.delete(key)
+        time.sleep(0.1)
         self.redirect('/')
 
 
@@ -359,6 +360,7 @@ class LikePost(BlogHandler):
                 post.likes += 1
                 post.likers = post.likers + " " + liker
                 post.put()
+                time.sleep(0.1)
                 self.redirect("/blog")
             elif liker in post.likers:
                 names = post.likers
@@ -371,7 +373,8 @@ class LikePost(BlogHandler):
                     names = "".join(names)
                     post.likers = names
                     post.put()
-        self.redirect("/blog")
+                    time.sleep(0.1)
+                    self.redirect("/blog")
 
 
 # Handler for Commenting on a post #####################################################################################
@@ -390,14 +393,29 @@ class NewComment(BlogHandler):
         self.render('comment.html', subject=subject, post = post, content=content, postuser = post.author, pkey=post.key())
 
     def post(self, post_id):
-        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-        post = db.get(key)
-        comment = self.request.get('comment')
+        post = Post.get_by_id(int(post_id), parent=blog_key())
+        p = post
         author = self.user.name
-        if comment:
-            c = Comment(post=post_id, comment = comment, parent=self.user.key(), author=author)
+        try:
+            commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and author= :author", post=post_id,
+                                    author=author)
+            editcomment = commentToEdit[0]
+            editcomment.delete()
+            comment = self.request.get('comment')
+            author = self.user.name
+            c = Comment(post=post_id, comment=comment, parent=self.user.key(), author=author)
             c.put()
-            self.redirect('/blog')
+            time.sleep(0.1)
+            self.redirect(('/post/%s' % str(p.key().id())+('/comment')))
+        except IndexError:
+            key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+            post = db.get(key)
+            comment = self.request.get('comment')
+            author = self.user.name
+            if comment:
+                c = Comment(post=post_id, comment = comment, parent=self.user.key(), author=author)
+                c.put()
+                self.redirect(('/post/%s' % str(p.key().id()) + ('/comment')))
 
 
 # Handler for deleting a comment #######################################################################################
@@ -405,11 +423,15 @@ class NewComment(BlogHandler):
 class DeleteComment(BlogHandler):
 
     def get(self, post_id):
-        commentToDelete = db.GqlQuery("SELECT * FROM Comment WHERE post= :post", post = post_id)
-        comment = commentToDelete[0]
-        if comment.author == self.user.name:
-            comment.delete()
-            self.redirect('/blog')
+        author = self.user.name
+        try:
+            commentToDelete = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and author= :author", post = post_id, author=author)
+            comment = commentToDelete[0]
+            if comment.author == self.user.name:
+                comment.delete()
+                self.redirect('/blog')
+        except IndexError:
+            self.render('error.html')
 
 # Handler for editing a post ##########################################################################################
 
@@ -429,6 +451,7 @@ class EditPost(BlogHandler):
         p = db.get(key)
         p.content = self.request.get('content')
         p.put()
+        time.sleep(0.1)
         self.redirect('/blog')
 
 
@@ -439,20 +462,27 @@ class EditComment(BlogHandler):
     def get(self, post_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         author = self.user.name
-        commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and author= :author", post=post_id, author=author)
+
+        commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and author= :author", post=post_id,
+                                    author=author)
         comment = commentToEdit[0]
-        if comment.author == self.user.name:
-            comment.delete()
-            self.render('editcomment.html', subject=post.subject, content=comment.comment, comment=comment.comment)
+
+        self.render('editcomment.html', subject=post.subject, content=comment.comment, comment=comment.comment)
 
 # This works, dont touch! ^^^###########################################################################################
 
     def post(self, post_id):
-        key = db.Key.from_path('Post', int(post_id), parent=blog_key())  #
-        comment = self.request.get('comment')                                                    #
-        author = self.user.name                                                                  #
-        c = Comment(post=post_id, comment=comment, parent=self.user.key(), author=author)        #
-        c.put()                                                                                  #
+        post = Post.get_by_id(int(post_id), parent=blog_key())
+        author = self.user.name
+        commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and author= :author", post=post_id,
+                                    author=author)
+        editcomment = commentToEdit[0]
+        editcomment.delete()
+        comment = self.request.get('comment')
+        author = self.user.name
+        c = Comment(post=post_id, comment=comment, parent=self.user.key(), author=author)
+        c.put()
+        time.sleep(0.1)
         self.redirect('/blog')
 
 

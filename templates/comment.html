@@ -25,9 +25,9 @@
             <p class="comment-content">{{ c.comment }}</p>
 
           <div class="confirmed-comment-options">
-            <a class="comment-confirmed-delete" href="/post/{{post.key().id()}}/deletecomment">delete</a>
-            |
-            <a class="comment-confirmed-edit" href="/post/{{post.key().id()}}/editcomment">edit</a>
+
+
+          <!--  <a class="comment-confirmed-edit" href="/post/{{post.key().id()}}/editcomment">edit</a> -->
           </div>
             <hr class="comment-divider">
 
@@ -48,7 +48,7 @@
 </label>
 <input type="submit" class="comment-submit">
 </form>
-
+<a class="comment-confirmed-delete" href="/post/{{post.key().id()}}/deletecomment">Delete my comment</a>
 
 
 
