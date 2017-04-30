@@ -68,6 +68,15 @@ body {
   text-decoration: none;
 }
 
+.error-message {
+  padding-left: 15%;
+}
+
+.error-to-home {
+  padding-left: 40%;
+  text-decoration: underline;
+}
+
 .goto-post-link {
   position: absolute;
   right: 60%;

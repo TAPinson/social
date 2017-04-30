@@ -11,11 +11,14 @@
   <div class="post-content">
     {{p._render_text}}
     <p>
-        <a href="/post/{{p.key().id()}}/editpost" class="EditPostButton">Edit Post</a>
         <a href="/post/{{p.key().id()}}/likes" class="LikeButton">🖒{{p.likes}}</a>
-        <a href="/post/{{p.key().id()}}/deletepost" class="DeleteButton">🗵</a>
         <a href="/post/{{p.key().id()}}/comment" class="comment-link">Comments</a>
         <a href="/post/{{p.key().id()}}" class="goto-post-link">Go to Post</a>
+
+
+        <a href="/post/{{p.key().id()}}/editpost" class="EditPostButton">Edit Post</a>
+        <a href="/post/{{p.key().id()}}/deletepost" class="DeleteButton">🗵</a>
+
   </div>
 {{error}}
 </div>

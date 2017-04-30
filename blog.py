@@ -422,7 +422,7 @@ class EditPost(BlogHandler):
             subject = post.subject
             self.render("editpost.html", content = content, post_id = post_id, subject = subject)
         else:
-            self.redirect('/blog')
+            self.render('error.html')
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
@@ -438,13 +438,16 @@ class EditComment(BlogHandler):
 
     def get(self, post_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
-        commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE post= :post", post=post_id)
-        comment = commentToEdit[0]
-        print comment.author
-        if comment.author == self.user.name:
-            comment.delete()
-            self.render('editcomment.html', subject = post.subject, content=comment.comment, comment=comment.comment)
-
+        author = self.user.name
+        print Comment.author.name
+        try:
+            commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and author= :author", post=post_id, author = author)
+            comment = commentToEdit[0]
+            if comment.author == self.user.name:
+                comment.delete()
+                self.render('editcomment.html', subject=post.subject, content=comment.comment, comment=comment.comment)
+        except IndexError:
+            self.render('error.html')
 
     def post(self, post_id):
         comment = self.request.get("comment")
@@ -457,9 +460,6 @@ class EditComment(BlogHandler):
         #c = Comment(post=post_id, comment=comment, parent=self.user.key(), author=author)
         #c.put()
         #self.redirect('/blog')
-
-
-
 
 
 #WSGI Mapping ##########################################################################################################
