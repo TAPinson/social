@@ -1,24 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2> Edit Post:<p></h2>
-<h3>{{subject}}</h3><p>
-<hr class="page-divider">
 
-<div class="postToEdit">Currenty Reads:<p>{{content}}<p></div>
-
-<form method ='post'>
- <textarea class="EditedContent" name="content">{{content}}</textarea><p>
- <input type="submit">
+<div class="editpost-original-edit">Edit Post</div>
+<div class="editpost-original-post">
+  <p>
+    <div class="editpost-original-subject">{{subject}}</div>
+    <p>
+  <div class="editpost-original-content">"{{content}}"</div>
+</div>
+<form method ='post' class="editpost-form">
+  <div class="editpost-content">
+    <textarea name="content" class="editpost-box" rows="1" wrap="soft">{{content}}</textarea>
+  </div>
+  <p>
+  <input type="submit" class="editpost-submit">
 </form>
 
-
-
-
-
-
-
-
-
-<div>{{post_id}}</div>
 {% endblock %}

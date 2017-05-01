@@ -1,55 +1,47 @@
 {% extends "base.html" %}
-
 {% block content %}
 
 <form method="post" class="comment-area">
   <input type="hidden" value="{{author}}">
+<div class="comment-post-box">
   <div>
     <p>
-       <h2>{{subject}}</h2></div>
-      <p>{{content}}</p>
-      <p>Posted by: {{postuser}}</p>
+      <div class="comment-post-subject"><h2>{{subject}}</h2></div>
+  </div>
 
-
-
+    <p>
+    <div class="comment-post-content">{{content}}</div>
+    <p>
+    <div class="comment-post-author">Posted by: {{postuser}}</div>
     <div class="comment-count">
       <span>{{post.comments.count()}} comments</span>
+
     </div>
-    <hr class="page-divider">
-    <div class="post-comments">
-        {% for c in post.comments %}
-
-        <div class="comment-display">
-
-            <div class="comment-author">{{ c.parent().name }} says:</div>
-            <p class="comment-content">{{ c.comment }}</p>
-
-          <div class="confirmed-comment-options">
+    <p>
+</div>
 
 
-          <!--  <a class="comment-confirmed-edit" href="/post/{{post.key().id()}}/editcomment">edit</a> -->
-          </div>
-            <hr class="comment-divider">
+  <div class="post-comments">
+    {% for c in post.comments %}
+    <div class="comment-display">
 
-      <!--
-      need to add update-comment and delete-comment functions-->
-        </div>
+      <p class="comment-content">"{{ c.comment }}"</p>
+      <div class="comment-author">-{{ c.parent().name }}</div>
+      <div class="confirmed-comment-options"></div>
 
-        {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
 
-
-
-
-
-
-
-<label>
-  <div class="comment-box"> <textarea name="comment">{{comment}}</textarea></div>
-</label>
-<input type="submit" class="comment-submit">
+  <label>
+    <div class="comment-box">
+      <textarea class="comment-box-box" wrap="hard" rows="1" name="comment">{{comment}}</textarea>
+      <!-- <input type="text" class="comment-box-box" name="comment" value="{{comment}}"> -->
+    </div>
+  </label>
+  <p>
+  <input type="submit" class="comment-submit">
+  <a class="comment-confirmed-delete" href="/post/{{post.key().id()}}/deletecomment">Delete my comment</a>
 </form>
-<a class="comment-confirmed-delete" href="/post/{{post.key().id()}}/deletecomment">Delete my comment</a>
-
-
 
 {% endblock %}

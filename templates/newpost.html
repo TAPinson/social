@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>New Post</h2>
+  <h2>New Post:</h2>
 
-    <form method="post">
+    <form method="post" class="newpost-form">
+
       <label>
-        <div>Title of Post:</div>
-        <input type="text" name="subject" value="{{subject}}">
+        <div class="newpost-newpost-title">Title:<br>
+        <input type="text" class="newpost-subject" name="subject" value="{{subject}}"></div>
       </label>
 
       <label>
-        <div>blog</div>
-        <textarea name="content">{{content}}</textarea>
+        <div class="newpost-newpost-head">Post:</div>
+        <textarea name="content" class="newpost-content" rows="1" wrap="hard">{{content}}</textarea>
       </label>
 
       <input type="hidden" name="author" value="{{user.name}}">
@@ -19,7 +20,7 @@
       <input type="hidden" name="likers" value="{{likers}}">
       <div class="error">{{error}}</div>
 
-      <input type="submit">
+      <input type="submit" class="newpost-submit">
 
     </form>
 

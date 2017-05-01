@@ -1,3 +1,5 @@
+/* universal */
+
 body {
     position: relative;
     font-family: Helvetica, Arial, sans-serif;
@@ -9,34 +11,6 @@ body {
     color: #7d97ad;
 }
 
-
-.confirmlikeform {
-  margin-left: 37%;
-}
-
-.confirmlikebutton {
-  margin-left: 10%;
-}
-
-.comment-box {
-  margin-left: 5%;
-  margin-top: 5%;
-}
-
-.comment-link {
-  color: #7d97ad;
-  text-decoration: none;
-  position: absolute;
-  bottom: 2%;
-  right: 91%;
-}
-
-.comment-area {
-  margin-top: 5%;
-  margin-left: 10%;
-  margin-right: 10%;
-}
-
 .comment-divider {
   border-style: solid;
   height: 1px;
@@ -44,46 +18,252 @@ body {
   color: #666;
 }
 
-.confirmdeleteform {
-  margin-top: 5%;
-  margin-left: 22%;
+/* end universal */
+
+/* post.html */
+
+.post-heading {
+    position: relative;
+    border-bottom: 3px solid #666;
 }
 
-.DeleteButton {
-    position: absolute;
-    right: 15%;
-    bottom: 0px;
+.post-title {
+    font-size: 24px;
+    font-weight: bold;
     color: #7d97ad;
-    text-decoration: none;
-    font-size: 18px;
-    color: #7d97ad
-    padding-bottom: 0.5%;
+}
+
+.post-date {
+    position: absolute;
+    right: 10px;
+    bottom: 2px;
+    color: #7d97ad;
+}
+
+.post-content {
+    margin-bottom: 100px;
+    color: #7d97ad;
+    font-size: 20px;
+}
+
+.post-links {
+    font-size: 14px;
+}
+
+.comment-link {
+  position: absolute;
+  color: #7d97ad;
+  text-decoration: none;
+  bottom: 2%;
+  right: 85%;
+}
+
+.LikeButton {
+  position: absolute;
+  color: #7d97ad;
+  text-decoration: none;
+  bottom: 2.2px;
+  right: 70%;
+}
+
+.goto-post-link {
+  position: absolute;
+  color: #7d97ad;
+  text-decoration: none;
+  bottom: 2px;
+  right: 55%;
 }
 
 .EditPostButton {
   position: absolute;
-  right: 40%;
-  bottom: 2%;
   color: #7d97ad;
   text-decoration: none;
+  bottom: 1.9%;
+  right: 40%;
 }
 
-.error-message {
-  padding-left: 15%;
+.DeleteButton {
+    position: absolute;
+    color: #7d97ad;
+    text-decoration: none;
+    bottom: 2.2px;
+    right: 22%;
 }
+/* end post.html */
+
+
+/* comment.html */
+
+.comment-area {
+  margin-top: 5%;
+  margin-right: 5%;
+}
+
+.comment-post-box {
+  border-radius: 25px;
+  border: 2px solid #666;
+  padding: 10px;
+  width: 100%;
+  max-height: 100%;
+}
+
+.comment-post-author {
+  position: absolute;
+  right: 15%;
+}
+.comment-post-subject {
+  padding-left: 5%;
+}
+
+.comment-post-content {
+  padding-left: 5%;
+}
+
+.comment-author {
+  padding-left: 5%;
+}
+
+.comment-count {
+  padding-left: 5%;
+}
+
+.comment-content {
+  font-style: italic;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.comment-display {
+  margin-top: 2%;
+  margin-left: 10%;
+  border-radius: 25px;
+  border: 2px solid #7d97ad;
+  padding: 10px;
+  width: 80%;
+  max-height: 100%;
+}
+
+.confirmlikebutton {
+  margin-left: 10%;
+}
+
+.comment-box {
+  margin-left: 18%;
+  margin-top: 5%;
+}
+
+.comment-box-box {
+  height: 150px;
+}
+
+.comment-confirmed-delete {
+  color: #7d97ad;
+  text-decoration: none;
+  padding-left: 39%;
+}
+
+.comment-submit {
+  margin-left: 18%;
+}
+
+/* end comment.html */
+
+/* newpost.html */
+
+
+.newpost-form {
+  margin-top: 4%;
+  margin-left: 13%;
+  border-radius: 25px;
+  border: 3px solid #666;
+  padding: 10px;
+  width: 70%;
+
+}
+
+.newpost-newpost-title {
+  margin-left: 5%;
+  padding-top: 2%;
+}
+
+.newpost-subject {
+  max-width: 30%;
+}
+
+.newpost-newpost-head {
+  padding-top: 1%;
+  margin-left: 5%;
+}
+
+.newpost-content {
+  max-height: 200px;
+  margin-left: 5%;
+}
+
+.newpost-submit {
+  margin-left: 40%;
+  margin-bottom: 2%;
+  margin-top: 1%;
+}
+
+/* end newpost.html */
+
+
+/* editpost.html */
+
+.editpost-original-edit {
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.editpost-original-subject {
+  text-align: center;
+  font-weight: bold;
+}
+
+.editpost-original-post {
+  margin-top: 4%;
+  border-radius: 25px;
+  border: 3px solid #7d97ad;
+  padding: 10px;
+  width: 70%;
+  margin-left: 12%;
+}
+
+.editpost-original-content {
+  text-align: center;
+  font-style: italic;
+}
+
+.editpost-box {
+  width: 60%;
+  max-height: 250px;
+  margin-left: 18.5%;
+  margin-top: 5%;
+}
+
+.editpost-submit {
+  margin-left: 42%;
+}
+
+ /* end editpost.html */
+
+
+
+
+
+
+
+
+
 
 .error-to-home {
   padding-left: 40%;
   text-decoration: underline;
 }
 
-.goto-post-link {
-  position: absolute;
-  right: 60%;
-  bottom: 0;
-  color: #7d97ad;
-  text-decoration: none;
-}
 
 h2 {
     font-size: 24px;
@@ -106,14 +286,7 @@ label + label {
     margin-top: 20px;
 }
 
-.LikeButton {
-  position: absolute;
-  right: 80%;
-  bottom: 0px;
-  color: #7d97ad;
-  text-decoration: none;
-  font-size: 22px;
-}
+
 
 .login-area {
     font-size: 13px;
@@ -237,36 +410,11 @@ input[type=submit] {
     margin-top: 15px;
 }
 
-.post-heading {
-    position: relative;
-    border-bottom: 3px solid #666;
-}
-
-.post-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #7d97ad;
-}
-
-.post-content {
-    margin-bottom: 100px;
-    color: #7d97ad;
-}
-
-.post-date {
-    position: absolute;
-    right: 10px;
-    bottom: 0px;
-    color: #7d97ad;
-}
 
 .post-options {
   margin-top: 5%;
   font-size: 18px;
 }
-
-
-
 
 .comment-user-options {
   color: #7d97ad;
@@ -288,12 +436,6 @@ input[type=submit] {
   text-decoration: none;
 }
 
-.comment-confirmed-delete {
-
-  color: #7d97ad;
-  text-decoration: none;
-}
-
 .comment-confirmed-edit {
   color: #7d97ad;
   text-decoration: none;
@@ -310,4 +452,19 @@ input[type=submit] {
   text-decoration: underline;
   font-size: 26px;
   margin-left: 25px;
+}
+
+.confirmlikeform {
+  margin-left: 37%;
+}
+
+.confirmdeleteform {
+ margin-top: 5%;
+ margin-left: 22%;
+}
+
+
+
+.error-message {
+ padding-left: 15%;
 }

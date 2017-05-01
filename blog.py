@@ -370,9 +370,11 @@ class LikePost(BlogHandler):
                     self.redirect("/blog")
                 elif liker in post.likers:
                     names = post.likers
+                    print names
                     names = names.split()
                     print names
                     if liker in names:
+                        print names
                         names.remove(liker)
                         print names
                         post.likes -= 1
@@ -381,6 +383,8 @@ class LikePost(BlogHandler):
                         post.put()
                         time.sleep(0.1)
                         self.redirect("/blog")
+                    else:
+                        print names
 
 
 # Handler for Commenting on a post #####################################################################################
@@ -473,7 +477,7 @@ class EditPost(BlogHandler):
             p.content = self.request.get('content')
             p.put()
             time.sleep(0.1)
-            self.redirect('/blog')
+            self.redirect(('/post/%s' % str(p.key().id()) + ('/editpost')))
 
 
 # Handler for editing a comment ########################################################################################
