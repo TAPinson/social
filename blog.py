@@ -345,9 +345,12 @@ class DeletePost(BlogHandler):
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-        db.delete(key)
-        time.sleep(0.1)
-        self.redirect('/')
+        if self.user.name == post.author:
+            db.delete(key)
+            time.sleep(0.1)
+            self.redirect('/blog')
+        else:
+            self.render('error.html')
 
 
 # Handler for liking a post ############################################################################################
