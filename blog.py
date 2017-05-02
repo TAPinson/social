@@ -361,7 +361,7 @@ class LikePost(BlogHandler):
             self.render('error.html')
         else:
             liker = self.user.name
-            if self.user.name != post.author:
+            if liker != post.author:
                 if liker not in post.likers:
                     post.likes += 1
                     post.likers = post.likers + " " + liker
@@ -383,8 +383,8 @@ class LikePost(BlogHandler):
                         post.put()
                         time.sleep(0.1)
                         self.redirect("/blog")
-                    else:
-                        print names
+            else:
+                self.render("error.html")
 
 
 # Handler for Commenting on a post #####################################################################################
