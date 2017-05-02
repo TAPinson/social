@@ -149,7 +149,7 @@ def blog_key(name='default'):
     return db.Key.from_path('blogs', name)
 
 
-# Defines the contents of a postr#############################################
+# Defines the contents of a post #############################################
 
 
 class Post(db.Model):
@@ -169,7 +169,7 @@ class Post(db.Model):
     def comments(self):
         return Comment.all().filter("post = ", str(self.key().id()))
 
-# Handler for blog homepage####################################################
+# Handler for blog homepage ###################################################
 
 
 class BlogFront(BlogHandler):
@@ -179,7 +179,7 @@ class BlogFront(BlogHandler):
 
         self.render('front.html', posts=posts)
 
-# Handler for retrieving a post###############################################
+# Handler for retrieving a post ##############################################
 
 
 class PostPage(BlogHandler):
@@ -348,7 +348,7 @@ class DeletePost(BlogHandler):
 
     def get(self, post_id):
         if not self.user:
-            self.render('error.html')
+            self.redirect('/login')
         else:
             key = db.Key.from_path('Post', int(post_id), parent=blog_key())
             post = db.get(key)
@@ -376,7 +376,7 @@ class LikePost(BlogHandler):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
         if not self.user:
-            self.render('error.html')
+            self.redirect('/login')
         else:
             liker = self.user.name
             if liker != post.author:
@@ -426,7 +426,7 @@ class NewComment(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         p = post
         if not self.user:
-            self.render('error.html')
+            self.redirect('/login')
         else:
             author = self.user.name
             try:
@@ -465,24 +465,24 @@ class NewComment(BlogHandler):
 class DeleteComment(BlogHandler):
 
     def get(self, post_id):
-        post = Post.get_by_id(int(post_id), parent=blog_key())
-        p = post
-        if not self.user:
-            self.render('error.html')
-        else:
-            author = self.user.name
-            try:
-                commentToDelete = db.GqlQuery("SELECT * FROM Comment WHERE"
-                                              " post= :post and"
-                                              " author= :author",
-                                              post=post_id, author=author)
-                comment = commentToDelete[0]
-                if comment.author == self.user.name:
-                    comment.delete()
-                    self.redirect(('/post/%s' % str(p.key().id()) + (
-                        '/comment')))
-            except IndexError:
-                self.render('error.html')
+            post = Post.get_by_id(int(post_id), parent=blog_key())
+            p = post
+            if not self.user:
+                self.redirect('/login')
+            else:
+                author = self.user.name
+                try:
+                    commentToDelete = db.GqlQuery("SELECT * FROM Comment WHERE"
+                                                " post= :post and"
+                                                " author= :author",
+                                                post=post_id, author=author)
+                    comment = commentToDelete[0]
+                    if comment.author == self.user.name:
+                        comment.delete()
+                        self.redirect(('/post/%s' % str(p.key().id()) + (
+                            '/comment')))
+                except IndexError:
+                    self.redirect('error.html')
 
 # Handler for editing a post #################################################
 
@@ -490,19 +490,22 @@ class DeleteComment(BlogHandler):
 class EditPost(BlogHandler):
 
     def get(self, post_id):
-        post = Post.get_by_id(int(post_id), parent=blog_key())
         if not self.user:
-            self.render('error.html')
+            self.redirect("/login")
         else:
-            if self.user.name == post.author:
-                content = post.content
-                subject = post.subject
-                self.render("editpost.html",
-                            content=content,
-                            post_id=post_id,
-                            subject=subject)
-            else:
+            post = Post.get_by_id(int(post_id), parent=blog_key())
+            if not self.user:
                 self.render('error.html')
+            else:
+                if self.user.name == post.author:
+                    content = post.content
+                    subject = post.subject
+                    self.render("editpost.html",
+                                content=content,
+                                post_id=post_id,
+                                subject=subject)
+                else:
+                    self.render('error.html')
 
     def post(self, post_id):
         if not self.user:
