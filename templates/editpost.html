@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-
 {% block content %}
 
 <div class="editpost-original-edit">Edit Post</div>
 <div class="editpost-original-post">
   <p>
-    <div class="editpost-original-subject">{{subject}}</div>
-    <p>
+  <div class="editpost-original-subject">{{subject}}</div>
+  <p>
   <div class="editpost-original-content">"{{content}}"</div>
 </div>
+
 <form method ='post' class="editpost-form">
   <div class="editpost-content">
     <textarea name="content" class="editpost-box" rows="1" wrap="soft">{{content}}</textarea>

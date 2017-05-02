@@ -1,8 +1,7 @@
 {% extends "base.html" %}
-
 {% block content %}
-  <h2>New Post:</h2>
 
+  <h2>New Post:</h2>
     <form method="post" class="newpost-form">
 
       <label>
@@ -19,12 +18,8 @@
       <input type="hidden" name="likes" value="{{likes}}">
       <input type="hidden" name="likers" value="{{likers}}">
       <div class="error">{{error}}</div>
-
       <input type="submit" class="newpost-submit">
 
     </form>
-
-
-
 
 {% endblock %}

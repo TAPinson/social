@@ -1,28 +1,28 @@
 
 <div class="post">
   <div class="post-heading">
-    <div class="post-title">
 
+    <div class="post-title">
       {{p.subject}}
     </div>
     <p>
+
     <div class="post-date">
       <div class="post-author">{{p.author}}</div>
       {{p.created.strftime("%b %d, %Y")}}
     </div>
+
   <div class="post-content">
     {{p._render_text}}
-    <p><div class="post-links">
-        <a href="/post/{{p.key().id()}}/comment" class="comment-link">Go to Comments</a>
-        <a href="/post/{{p.key().id()}}/likes" class="LikeButton">Likes: {{p.likes}}</a>
-        <a href="/post/{{p.key().id()}}" class="goto-post-link">Go to Post</a>
-        <a href="/post/{{p.key().id()}}/editpost" class="EditPostButton">Edit Post</a>
-        <a href="/post/{{p.key().id()}}/deletepost" class="DeleteButton">Delete Post</a>
-      </div>
+    <p>
+    <div class="post-links">
+      <a href="/post/{{p.key().id()}}/comment" class="comment-link">Go to Comments</a>
+      <a href="/post/{{p.key().id()}}/likes" class="LikeButton">Likes: {{p.likes}}</a>
+      <a href="/post/{{p.key().id()}}" class="goto-post-link">Go to Post</a>
+      <a href="/post/{{p.key().id()}}/editpost" class="EditPostButton">Edit Post</a>
+      <a href="/post/{{p.key().id()}}/deletepost" class="DeleteButton">Delete Post</a>
+    </div>
   </div>
-{{error}}
+  {{error}}
+  </div>
 </div>
-
-
-{% block content %}
-{% endblock %}

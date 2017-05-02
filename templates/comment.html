@@ -20,23 +20,19 @@
     <p>
 </div>
 
-
   <div class="post-comments">
     {% for c in post.comments %}
-    <div class="comment-display">
-
-      <p class="comment-content">"{{ c.comment }}"</p>
-      <div class="comment-author">-{{ c.parent().name }}</div>
-      <div class="confirmed-comment-options"></div>
-
-    </div>
+      <div class="comment-display">
+        <p class="comment-content">"{{ c.comment }}"</p>
+        <div class="comment-author">-{{ c.parent().name }}</div>
+        <div class="confirmed-comment-options"></div>
+      </div>
     {% endfor %}
   </div>
 
   <label>
     <div class="comment-box">
       <textarea class="comment-box-box" wrap="hard" rows="1" name="comment">{{comment}}</textarea>
-      <!-- <input type="text" class="comment-box-box" name="comment" value="{{comment}}"> -->
     </div>
   </label>
   <p>

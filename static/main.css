@@ -11,11 +11,60 @@ body {
     color: #7d97ad;
 }
 
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+input[type=text] {
+    width: 500px;
+    font-size: 20px;
+    padding: 2px;
+    font-family: monospace;
+}
+
+textarea {
+  width: 500px;
+  height: 400px;
+  font-size: 17px;
+  font-family: monospace;
+}
+
+input[type=submit] {
+  font-size: 18px;
+}
+
+label {
+  display: block;
+  font-size: 20px;
+  text-align: left;
+}
+
+label + label {
+    margin-top: 20px;
+}
+
+.post + .post {
+    margin-top: 15px;
+}
+
 .comment-divider {
   border-style: solid;
   height: 1px;
   background-color: #666;
   color: #666;
+}
+
+.page-divider {
+  border-style: solid;
+  height: 1px;
+  background-color: #666;
+  color: #666;
+}
+
+.error-message {
+ padding-left: 15%;
 }
 
 /* end universal */
@@ -89,8 +138,8 @@ body {
     bottom: 2.2px;
     right: 22%;
 }
-/* end post.html */
 
+/* end post.html */
 
 /* comment.html */
 
@@ -170,7 +219,6 @@ body {
 
 /* newpost.html */
 
-
 .newpost-form {
   margin-top: 4%;
   margin-left: 13%;
@@ -178,7 +226,6 @@ body {
   border: 3px solid #666;
   padding: 10px;
   width: 70%;
-
 }
 
 .newpost-newpost-title {
@@ -208,7 +255,6 @@ body {
 
 /* end newpost.html */
 
-
 /* editpost.html */
 
 .editpost-original-edit {
@@ -235,6 +281,7 @@ body {
 .editpost-original-content {
   text-align: center;
   font-style: italic;
+  padding-bottom: 2%;
 }
 
 .editpost-box {
@@ -248,67 +295,22 @@ body {
   margin-left: 42%;
 }
 
- /* end editpost.html */
+/* end editpost.html */
 
+/* myposts.html */
 
-
-
-
-
-
-
-
-
-.error-to-home {
-  padding-left: 40%;
-  text-decoration: underline;
+.myposts-rendered {
+  margin-top: 2%;
+  border-radius: 25px;
+  border: 3px solid #7d97ad;
+  padding: 10px;
+  width: 80%;
+  margin-left: 8%;
 }
 
+/* end myposts.html */
 
-h2 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.home-link {
-  color: #7d97ad;
-  text-decoration: none;
-}
-
-label {
-  display: block;
-  font-size: 20px;
-  text-align: left;
-}
-
-label + label {
-    margin-top: 20px;
-}
-
-
-
-.login-area {
-    font-size: 13px;
-    color: #7d97ad;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-.login-link {
-    color: #7d97ad;
-    text-decoration: none;
-}
-
-.login-link:hover {
-    text-decoration: underline;
-}
-
-
-.login-username {
-  max-width: 32.5%;
-}
+/* base.html */
 
 .main-title {
     display: block;
@@ -320,20 +322,17 @@ label + label {
     text-decoration: none;
 }
 
-.new-post-link {
+.login-area {
+    font-size: 13px;
+    color: #7d97ad;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.home-link {
   color: #7d97ad;
   text-decoration: none;
-}
-
-.postToEdit {
-  font-style: italic;
-}
-
-.page-divider {
-  border-style: solid;
-  height: 1px;
-  background-color: #666;
-  color: #666;
 }
 
 .profile-link{
@@ -341,22 +340,54 @@ label + label {
   text-decoration: none;
 }
 
+.new-post-link {
+  color: #7d97ad;
+  text-decoration: none;
+}
+
+.login-link {
+    color: #7d97ad;
+    text-decoration: none;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+/* end base.html */
+
+/* login-form.html */
+
+.loginsheet {
+  color: #7d97ad;
+  margin-left: 30%;
+}
+
+.login-username {
+  max-width: 32.5%;
+}
+
 .error {
     color: red;
+}
+
+.login-submit {
+  margin-left: 22.5%;
+  margin-top: 3%;
+  margin-bottom: 2%;
+}
+
+/* end login-form.html */
+
+/* signup-form.html */
+
+.signup-title {
+  margin-left: 37.5%;
 }
 
 .signupsheet {
   padding-top: 1%;
   margin-left: 22%;
-}
-
-.signup-password{
-  margin-left: 3%;
-
-}
-
-.signup-title {
-  margin-left: 37.5%;
 }
 
 .signup-username {
@@ -369,77 +400,19 @@ label + label {
   margin-left: 3%;
 }
 
+.signup-password {
+  margin-left: 3%;
+}
+
 .signup-submit {
   margin-left: 22.5%;
   margin-top: 3%;
   margin-bottom: 2%;
 }
 
-.loginsheet {
-  color: #7d97ad;
-  margin-left: 30%;
-}
+/* end signup-form.html */
 
-.login-submit {
-  margin-left: 22.5%;
-  margin-top: 3%;
-  margin-bottom: 2%;
-}
-
-
-
-input[type=text] {
-    width: 500px;
-    font-size: 20px;
-    padding: 2px;
-    font-family: monospace;
-}
-
-textarea {
-  width: 500px;
-  height: 400px;
-  font-size: 17px;
-  font-family: monospace;
-}
-
-input[type=submit] {
-  font-size: 18px;
-}
-
-.post + .post {
-    margin-top: 15px;
-}
-
-
-.post-options {
-  margin-top: 5%;
-  font-size: 18px;
-}
-
-.comment-user-options {
-  color: #7d97ad;
-  text-decoration: none;
-}
-
-.confirmdeletebutton {
-  margin-top: 5%;
-  margin-left: 25%;
-}
-
-.post-link {
-  position: absolute;
-  right: 550px;
-  bottom: 0px;
-  text-decoration: none;
-  font-size: 14px;
-  color: #7d97ad;
-  text-decoration: none;
-}
-
-.comment-confirmed-edit {
-  color: #7d97ad;
-  text-decoration: none;
-}
+/* welcome.html */
 
 .user-posts {
   color: #7d97ad;
@@ -454,17 +427,60 @@ input[type=submit] {
   margin-left: 25px;
 }
 
-.confirmlikeform {
-  margin-left: 37%;
-}
+/* end welcome.html */
+
+/* deletepost.html */
 
 .confirmdeleteform {
  margin-top: 5%;
  margin-left: 22%;
 }
 
-
-
-.error-message {
- padding-left: 15%;
+.confirmdeletebutton {
+  margin-top: 5%;
+  margin-left: 25%;
 }
+
+/* end deletepost.html */
+
+/* error.html */
+
+.error-to-home {
+  padding-left: 40%;
+  text-decoration: underline;
+}
+
+/* end error.html */
+
+/*
+.postToEdit {
+  font-style: italic;
+}
+*/
+
+
+/*
+.post-options {
+  margin-top: 5%;
+  font-size: 18px;
+}
+*/
+
+/*
+.comment-user-options {
+  color: #7d97ad;
+  text-decoration: none;
+}
+*/
+
+/*
+.post-link {
+  position: absolute;
+  right: 550px;
+  bottom: 0px;
+  text-decoration: none;
+  font-size: 14px;
+  color: #7d97ad;
+  text-decoration: none;
+}
+*/

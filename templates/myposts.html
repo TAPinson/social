@@ -1,12 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-
-<h2>Posts By {{username}}:</h2>
-
-
+  <h2>Posts By {{username}}:</h2>
   {% for p in posts %}
-    {{ p.render() | safe }}
-    <br><br>
+    <div class="myposts-rendered">
+      {{ p.render() | safe }}
+    </div>
   {% endfor %}
-
 {% endblock %}
