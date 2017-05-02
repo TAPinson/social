@@ -7,7 +7,7 @@ How to setup project on local machine:
 -Direct web browser to http://localhost:8080
 
 URL to view live project:
-NOT YET DEPLOYED
+https://projectsocialtap.appspot.com
 
 Developer:
 Travis Pinson
