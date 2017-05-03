@@ -14,6 +14,7 @@
     <p>
     <div class="comment-post-author">Posted by: {{postuser}}</div>
     <div class="comment-count">
+
       <span>{{post.comments.count()}} comments</span>
 
     </div>
@@ -24,7 +25,10 @@
     {% for c in post.comments %}
       <div class="comment-display">
         <p class="comment-content">"{{ c.comment }}"</p>
-        <div class="comment-author">-{{ c.parent().name }}</div>
+        <div class="comment-author">-{{ c.parent().name }} |
+          <a href="/post/{{post.key().id()}}/comment/{{c.key().id()}}" class="comment-goto-comment"> Go To Comment </a>
+        </div>
+
         <div class="confirmed-comment-options"></div>
       </div>
     {% endfor %}
@@ -37,7 +41,7 @@
   </label>
   <p>
   <input type="submit" class="comment-submit">
-  <a class="comment-confirmed-delete" href="/post/{{post.key().id()}}/deletecomment">Delete my comment</a>
+
 </form>
 
 {% endblock %}

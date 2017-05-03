@@ -176,7 +176,6 @@ class BlogFront(BlogHandler):
 
     def get(self):
         posts = db.GqlQuery("select * from Post order by created desc")
-
         self.render('front.html', posts=posts)
 
 # Handler for retrieving a post ##############################################
@@ -413,60 +412,56 @@ class Comment(db.Model):
     author = db.StringProperty(required=True)
 
 
+    @property
+    def comments(self):
+        return Comment.all().filter("post = ", str(self.key().id()))
+
+
 class NewComment(BlogHandler):
 
     def get(self, post_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         subject = post.subject
         content = post.content
+
         self.render('comment.html', subject=subject, post=post,
                     content=content, postuser=post.author, pkey=post.key())
 
     def post(self, post_id):
-        post = Post.get_by_id(int(post_id), parent=blog_key())
-        p = post
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+
         if not self.user:
             self.redirect('/login')
         else:
             author = self.user.name
-            try:
-                commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE "
-                                            "post= :post and "
-                                            "author= :author",
-                                            post=post_id,
-                                            author=author)
-                editcomment = commentToEdit[0]
-                editcomment.delete()
-                comment = self.request.get('comment')
-                author = self.user.name
-                c = Comment(post=post_id,
-                            comment=comment,
-                            parent=self.user.key(),
-                            author=author)
+            comment = db.GqlQuery("SELECT * FROM Comment WHERE "
+                                        "post= :post and "
+                                        "author= :author",
+                                        post=post_id,
+                                        author=author)
+            key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+            post = db.get(key)
+            comment = self.request.get('comment')
+            author = self.user.name
+            if comment:
+                parent = self.user.key()
+                c = Comment(post=post_id, comment=comment,
+                parent=parent, author=author)
                 c.put()
-                time.sleep(0.1)
-                self.redirect(('/post/%s' % str(p.key().id())+('/comment')))
-            except IndexError:
-                key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-                post = db.get(key)
-                comment = self.request.get('comment')
-                author = self.user.name
-                if comment:
-                    parent = self.user.key()
-                    c = Comment(post=post_id, comment=comment,
-                                parent=parent, author=author)
-                    c.put()
-                    self.redirect(('/post/%s' % str(p.key().id()) +
-                                   ('/comment')))
+                p = post
+                self.redirect(('/post/%s' % str(p.key().id()) +
+                              ('/comment')))
 
 # Handler for deleting a comment #############################################
 
 
 class DeleteComment(BlogHandler):
 
-    def get(self, post_id):
+    def get(self, post_id, comment_id):
             post = Post.get_by_id(int(post_id), parent=blog_key())
-            p = post
+            pkey = post.key
+            key = db.Key.from_path('Comment', int(comment_id))
+            db.delete(key)
             if not self.user:
                 self.redirect('/login')
             else:
@@ -479,10 +474,27 @@ class DeleteComment(BlogHandler):
                     comment = commentToDelete[0]
                     if comment.author == self.user.name:
                         comment.delete()
-                        self.redirect(('/post/%s' % str(p.key().id()) + (
-                            '/comment')))
+                        p = post
+                        c = comment
+                        time.sleep(0.1)
+                        self.redirect(('/post/%s' % str(p.key().id()) + ('/comment'))) #% str(c.key().id()))))
                 except IndexError:
-                    self.redirect('error.html')
+                    self.render('error.html')
+
+                # commentCheck = comment[0]
+                # print commentCheck.author
+                # if commentCheck.author == self.user.name:
+                # alreadyCommented = "You've already commented! Try to delete your comment first!"
+                # editcomment.delete()
+                # comment = self.request.get('comment')
+                # author = self.user.name
+                # c = Comment(post=post_id,
+                #            comment=comment,
+                #            parent=self.user.key(),
+                #            author=author)
+                # c.put()
+                #    time.sleep(0.1)
+                #    self.redirect(('/post/%s' % str(p.key().id())+('/comment')))
 
 # Handler for editing a post #################################################
 
@@ -498,12 +510,12 @@ class EditPost(BlogHandler):
                 self.render('error.html')
             else:
                 if self.user.name == post.author:
-                    content = post.content
-                    subject = post.subject
+                    content = Post.content
+                    subject = Post.subject
                     self.render("editpost.html",
                                 content=content,
                                 post_id=post_id,
-                                subject=subject)
+                                subject=subject, post=post)
                 else:
                     self.render('error.html')
 
@@ -523,39 +535,61 @@ class EditPost(BlogHandler):
 
 class EditComment(BlogHandler):
 
-    def get(self, post_id):
-        post = Post.get_by_id(int(post_id), parent=blog_key())
+    def get(self, post_id, comment_id):
+        post = Post.get_by_id(int(comment_id), parent=blog_key())
+        comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
+        content = comments.comment
+        print comments.comment
         if not self.user:
             self.render('error.html')
         else:
             author = self.user.name
-            commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE "
-                                        "post= :post and author= :author",
-                                        post=post_id,
-                                        author=author)
-            comment = commentToEdit[0]
-            self.render('editcomment.html',
-                        subject=post.subject,
-                        content=comment.comment,
-                        comment=comment.comment)
+            comment = Comment.comment
+            content = Post.content
+            subject = Post.subject
+            self.render('editcomment.html', subject=subject, comments=comments, comment=comment)
 
-    def post(self, post_id):
+
+    def post(self, post_id, comment_id):
+        post = Post.get_by_id(int(comment_id), parent=blog_key())
+        comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
+
+
+
+
+
+        #post = Post.get_by_id(int(comment_id), parent=blog_key())
+        #comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
+        #print "hi"
+        #print "hi"
+        #comment = self.request.get('updatedContent')
+        #comments.put()
+        #time.sleep(0.1)
+
+        #self.redirect(('/post/%s' % str(p.key().id()) + ('/editpost')))
+
+    #def post(self, post_id, comment_id):
+        #comment = Comment.get_by_id(int(comment_id), parent=self.user.key())
+        #author = self.user.name
+        #print "SQUIRREL"
+        #updatecomment = self.request.get('comment')
+        #c = Comment(post=post_id, author=author, comment_id=comment_id, comment=updatecomment)
+        #c.put()
+        #self.redirect(('/post/%s' % str(post.key().id()) + ('/comment')))
+
+
+
+
+
+class ViewComment(BlogHandler):
+
+    def get(self, post_id, comment_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
-        author = self.user.name
-        commentToEdit = db.GqlQuery("SELECT * FROM Comment WHERE"
-                                    " post= :post and author= :author",
-                                    post=post_id,
-                                    author=author)
-        editcomment = commentToEdit[0]
-        editcomment.delete()
-        comment = self.request.get('comment')
-        author = self.user.name
-        parent = self.user.key()
-        c = Comment(post=post_id, comment=comment, parent=parent,
-                    author=author)
-        c.put()
-        time.sleep(0.1)
-        self.redirect('/blog')
+        comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
+        content = comments.comment
+        print content
+        self.render('viewcomment.html', post=post, comments=comments, comment_id=comment_id)
+
 
 # WSGI Mapping ################################################################
 
@@ -563,11 +597,12 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/blog/?', BlogFront),
                                ('/post/([0-9]+)', PostPage),
                                ('/post/([0-9]+)/comment', NewComment),
+                               ('/post/([0-9]+)/comment/([0-9]+)', ViewComment),
                                ('/post/([0-9]+)/deletepost', DeletePost),
-                               ('/post/([0-9]+)/deletecomment', DeleteComment),
+                               ('/post/([0-9]+)/comment/([0-9]+)/deletecomment', DeleteComment),
                                ('/post/([0-9]+)/likes', LikePost),
                                ('/post/([0-9]+)/editpost', EditPost),
-                               ('/post/([0-9]+)/editcomment', EditComment),
+                               ('/post/([0-9]+)/comment/([0-9]+)/editcomment', EditComment),
                                ('/post/newpost', NewPost),
                                ('/signup', Register),
                                ('/login', Login),

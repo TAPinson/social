@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="viewcomment-original-comment">"{{comments.comment}}"</div> 
+
+
+<form method="post">
+  <!-- <input type="hidden" name="author" value="{{author}}"> -->
+  <label>
+    <div class="comment-box">
+      <textarea class="comment-box-box" wrap="hard" rows="1" name="{{content}}">{{content}}</textarea>
+    </div>
+  </label>
+  <input type="submit" class="comment-submit">
+</form>
+{% endblock %}

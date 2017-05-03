@@ -172,6 +172,13 @@ label + label {
   padding-left: 5%;
 }
 
+.comment-goto-comment {
+  position: absolute;
+  text-decoration: none;
+  color: #7d97ad;
+  right: 125px;
+}
+
 .comment-count {
   padding-left: 5%;
 }
@@ -292,7 +299,13 @@ label + label {
 }
 
 .editpost-submit {
-  margin-left: 42%;
+  margin-left: 40%;
+  margin-top: 0.3%;
+}
+
+.editpost-cancel {
+  height: 26.2px;
+  font-weight: bold;
 }
 
 /* end editpost.html */
@@ -484,3 +497,40 @@ label + label {
   text-decoration: none;
 }
 */
+
+.viewcomment-original-comment {
+  font-style: italic;
+  padding-left: 35%;
+  margin-top: 4%;
+  border-radius: 25px;
+  border: 3px solid #7d97ad;
+  padding: 10px;
+  width: 30%;
+  margin-left: 25%;
+  padding-left: 22%;
+}
+
+
+.viewcomment-homelink {
+  text-decoration: none;
+  color: #7d97ad;
+  position: absolute;
+  left: 10px;
+  right: 300px;
+}
+
+.viewcomment-confirmed-delete {
+  text-decoration: none;
+  color: #7d97ad;
+  position: absolute;
+  right: 20px;
+
+}
+
+.viewcomment-editcomment {
+  text-decoration: none;
+  color: #7d97ad;
+  position: absolute;
+  right: 200px;
+
+}
