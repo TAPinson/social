@@ -539,7 +539,7 @@ class EditComment(BlogHandler):
         post = Post.get_by_id(int(comment_id), parent=blog_key())
         comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
         content = comments.comment
-        print comments.comment
+
         if not self.user:
             self.render('error.html')
         else:
@@ -553,7 +553,8 @@ class EditComment(BlogHandler):
     def post(self, post_id, comment_id):
         post = Post.get_by_id(int(comment_id), parent=blog_key())
         comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
-
+        comment = comments.comment
+        print comment
 
 
 
