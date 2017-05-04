@@ -490,13 +490,16 @@ class EditPost(BlogHandler):
             return
         else:
             post = Post.get_by_id(int(post_id), parent=blog_key())
-            if self.user.name == post.author:
-                content = Post.content
-                subject = Post.subject
-                self.render("editpost.html",
-                            content=content,
-                            post_id=post_id,
-                            subject=subject, post=post)
+            if post:
+                if self.user.name == post.author:
+                    content = Post.content
+                    subject = Post.subject
+                    self.render("editpost.html",
+                                content=content,
+                                post_id=post_id,
+                                subject=subject, post=post)
+                else:
+                    self.render('error.html')
             else:
                 self.render('error.html')
 
