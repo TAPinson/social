@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-
 <div class="editpost-original-edit">Edit Comment</div>
 <div class="editpost-original-post">
   <p>
@@ -17,4 +16,9 @@
   <p>
   <input type="submit" class="editpost-submit">
 </form>
+
+<form action="/blog">
+    <input type="submit" class="editpost-cancel" value="Cancel" />
+</form>
+
 {% endblock %}

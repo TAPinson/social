@@ -299,13 +299,13 @@ label + label {
 }
 
 .editpost-submit {
-  margin-left: 40%;
-  margin-top: 0.3%;
+  margin-left: 35%;
+  position: absolute;
 }
 
 .editpost-cancel {
-  height: 26.2px;
-  font-weight: bold;
+  margin-left: 50%;
+  position: absolute;
 }
 
 /* end editpost.html */
@@ -456,16 +456,7 @@ label + label {
 
 /* end deletepost.html */
 
-/* error.html */
-
-.error-to-home {
-  padding-left: 40%;
-  text-decoration: underline;
-}
-
-/* end error.html */
-
-
+/* viewcomment.html */
 
 .viewcomment-original-comment {
   font-style: italic;
@@ -479,12 +470,10 @@ label + label {
   text-align: center;
 }
 
-
 .viewcomment-homelink {
   text-decoration: none;
   color: #7d97ad;
   position: absolute;
-
   right: 65%;
 }
 
@@ -493,7 +482,6 @@ label + label {
   color: #7d97ad;
   position: absolute;
   right: 42%;
-
 }
 
 .viewcomment-editcomment {
@@ -501,5 +489,15 @@ label + label {
   color: #7d97ad;
   position: absolute;
   right: 25%;
-
 }
+
+/* end viewcomment.html */
+
+/* error.html */
+
+.error-to-home {
+  padding-left: 40%;
+  text-decoration: underline;
+}
+
+/* end error.html */
