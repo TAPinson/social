@@ -557,11 +557,18 @@ class EditComment(BlogHandler):
         else:
             comments = Comment.get_by_id(int(comment_id),
                                          parent=self.user.key())
-            commentToEdit = comments.comment
-            comment = self.request.get('comment')
-            comments.comment = comment
-            comments.put()
-            self.redirect(('/post/%s' % str(post_id) + ('/comment')))
+            if comments:
+                if comments.author == self.user.name:
+                    commentToEdit = comments.comment
+                    comment = self.request.get('comment')
+                    comments.comment = comment
+                    comments.put()
+                    self.redirect(('/post/%s' % str(post_id) + ('/comment')))
+                    return
+                else:
+                    self.render('error.html')
+            else:
+                self.render('error.html')
 
 # Handler for viewing a comment ###############################################
 
