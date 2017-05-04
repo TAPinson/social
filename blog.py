@@ -544,19 +544,49 @@ class EditComment(BlogHandler):
             self.render('error.html')
         else:
             author = self.user.name
-            comment = Comment.comment
+            commentToEdit=comments.comment
+            commentToEdit = self.request.get('commentToEdit')
+            #print commentToEdit
             content = Post.content
             subject = Post.subject
-            self.render('editcomment.html', subject=subject, comments=comments, comment=comment)
 
+            self.render('editcomment.html', subject=subject, post=post, content=content, comments=comments)
+            #commentToEdit = self.request.get('comment')
+            #print commentToEdit, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 
     def post(self, post_id, comment_id):
-        post = Post.get_by_id(int(comment_id), parent=blog_key())
         comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
-        comment = comments.comment
+        print comments.comment
+        #commentToEdit = db.GqlQuery("SELECT * FROM Comment where comment= :comment", comment = comments.comment)
+        commentToEdit = comments.comment
+        print commentToEdit
+        comment = self.request.get('comment')
         print comment
 
+        comments.comment = comment
+        comments.put()
+        self.redirect(('/post/%s' % str(post_id) + ('/comment')))
 
+        #comment = commentToEdit[0]
+
+
+        ## this key prints the key for the correct comment in the datastore ##
+
+
+        #p.comment = self.request.get('comment')
+        #p.put()
+
+
+    #def post(self):
+        #post = Post.get_by_id(int(comment_id), parent=blog_key())
+        #comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
+        #comment = comments.comment
+        #print comment
+        #comment = self.request.get('comment')
+        #author = self.user.name
+        #print author
+        #print comment
+        #???????????#
 
 
         #post = Post.get_by_id(int(comment_id), parent=blog_key())
