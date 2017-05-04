@@ -429,7 +429,6 @@ class NewComment(BlogHandler):
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-
         if not self.user:
             self.redirect('/login')
         else:
@@ -458,43 +457,16 @@ class NewComment(BlogHandler):
 class DeleteComment(BlogHandler):
 
     def get(self, post_id, comment_id):
-            post = Post.get_by_id(int(post_id), parent=blog_key())
-            pkey = post.key
-            key = db.Key.from_path('Comment', int(comment_id))
-            db.delete(key)
-            if not self.user:
-                self.redirect('/login')
+        if not self.user:
+            self.render('error.html')
+        else:
+            comment = Comment.get_by_id(int(comment_id), parent=self.user.key())
+            if self.user.name == comment.author:
+                db.delete(comment)
+                time.sleep(0.1)
+                self.redirect('/blog')
             else:
-                author = self.user.name
-                try:
-                    commentToDelete = db.GqlQuery("SELECT * FROM Comment WHERE"
-                                                " post= :post and"
-                                                " author= :author",
-                                                post=post_id, author=author)
-                    comment = commentToDelete[0]
-                    if comment.author == self.user.name:
-                        comment.delete()
-                        p = post
-                        c = comment
-                        time.sleep(0.1)
-                        self.redirect(('/post/%s' % str(p.key().id()) + ('/comment'))) #% str(c.key().id()))))
-                except IndexError:
-                    self.render('error.html')
-
-                # commentCheck = comment[0]
-                # print commentCheck.author
-                # if commentCheck.author == self.user.name:
-                # alreadyCommented = "You've already commented! Try to delete your comment first!"
-                # editcomment.delete()
-                # comment = self.request.get('comment')
-                # author = self.user.name
-                # c = Comment(post=post_id,
-                #            comment=comment,
-                #            parent=self.user.key(),
-                #            author=author)
-                # c.put()
-                #    time.sleep(0.1)
-                #    self.redirect(('/post/%s' % str(p.key().id())+('/comment')))
+                self.render('error.html')
 
 # Handler for editing a post #################################################
 
@@ -506,18 +478,15 @@ class EditPost(BlogHandler):
             self.redirect("/login")
         else:
             post = Post.get_by_id(int(post_id), parent=blog_key())
-            if not self.user:
-                self.render('error.html')
+            if self.user.name == post.author:
+                content = Post.content
+                subject = Post.subject
+                self.render("editpost.html",
+                            content=content,
+                            post_id=post_id,
+                            subject=subject, post=post)
             else:
-                if self.user.name == post.author:
-                    content = Post.content
-                    subject = Post.subject
-                    self.render("editpost.html",
-                                content=content,
-                                post_id=post_id,
-                                subject=subject, post=post)
-                else:
-                    self.render('error.html')
+                self.render('error.html')
 
     def post(self, post_id):
         if not self.user:
@@ -539,77 +508,28 @@ class EditComment(BlogHandler):
         post = Post.get_by_id(int(comment_id), parent=blog_key())
         comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
         content = comments.comment
-
         if not self.user:
             self.render('error.html')
         else:
             author = self.user.name
             commentToEdit=comments.comment
             commentToEdit = self.request.get('commentToEdit')
-            #print commentToEdit
             content = Post.content
             subject = Post.subject
-
             self.render('editcomment.html', subject=subject, post=post, content=content, comments=comments)
-            #commentToEdit = self.request.get('comment')
-            #print commentToEdit, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 
     def post(self, post_id, comment_id):
-        comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
-        print comments.comment
-        #commentToEdit = db.GqlQuery("SELECT * FROM Comment where comment= :comment", comment = comments.comment)
-        commentToEdit = comments.comment
-        print commentToEdit
-        comment = self.request.get('comment')
-        print comment
+        if not self.user:
+            self.redirect("/login")
+        else:
+            comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
+            commentToEdit = comments.comment
+            comment = self.request.get('comment')
+            comments.comment = comment
+            comments.put()
+            self.redirect(('/post/%s' % str(post_id) + ('/comment')))
 
-        comments.comment = comment
-        comments.put()
-        self.redirect(('/post/%s' % str(post_id) + ('/comment')))
-
-        #comment = commentToEdit[0]
-
-
-        ## this key prints the key for the correct comment in the datastore ##
-
-
-        #p.comment = self.request.get('comment')
-        #p.put()
-
-
-    #def post(self):
-        #post = Post.get_by_id(int(comment_id), parent=blog_key())
-        #comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
-        #comment = comments.comment
-        #print comment
-        #comment = self.request.get('comment')
-        #author = self.user.name
-        #print author
-        #print comment
-        #???????????#
-
-
-        #post = Post.get_by_id(int(comment_id), parent=blog_key())
-        #comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
-        #print "hi"
-        #print "hi"
-        #comment = self.request.get('updatedContent')
-        #comments.put()
-        #time.sleep(0.1)
-
-        #self.redirect(('/post/%s' % str(p.key().id()) + ('/editpost')))
-
-    #def post(self, post_id, comment_id):
-        #comment = Comment.get_by_id(int(comment_id), parent=self.user.key())
-        #author = self.user.name
-        #print "SQUIRREL"
-        #updatecomment = self.request.get('comment')
-        #c = Comment(post=post_id, author=author, comment_id=comment_id, comment=updatecomment)
-        #c.put()
-        #self.redirect(('/post/%s' % str(post.key().id()) + ('/comment')))
-
-
-
+# Handler for viewing a comment ################################################
 
 
 class ViewComment(BlogHandler):
@@ -617,10 +537,7 @@ class ViewComment(BlogHandler):
     def get(self, post_id, comment_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
-        content = comments.comment
-        print content
         self.render('viewcomment.html', post=post, comments=comments, comment_id=comment_id)
-
 
 # WSGI Mapping ################################################################
 
