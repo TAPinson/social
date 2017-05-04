@@ -446,8 +446,7 @@ class NewComment(BlogHandler):
         else:
             author = self.user.name
             comment = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and"
-                                  "author= :author", post=post_id,
-                                  author=author)
+                                  " author= :author", post=post_id, author=author)
             key = db.Key.from_path('Post', int(post_id), parent=blog_key())
             post = db.get(key)
             comment = self.request.get('comment')
