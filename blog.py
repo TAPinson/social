@@ -471,11 +471,14 @@ class DeleteComment(BlogHandler):
         else:
             comment = Comment.get_by_id(int(comment_id),
                                         parent=self.user.key())
-            if self.user.name == comment.author:
-                db.delete(comment)
-                time.sleep(0.1)
-                self.redirect('/blog')
-                return
+            if comment is not None:
+                if self.user.name == comment.author:
+                    db.delete(comment)
+                    time.sleep(0.1)
+                    self.redirect('/blog')
+                    return
+                else:
+                    self.render('error.html')
             else:
                 self.render('error.html')
 
@@ -490,7 +493,7 @@ class EditPost(BlogHandler):
             return
         else:
             post = Post.get_by_id(int(post_id), parent=blog_key())
-            if post:
+            if post is not None:
                 if self.user.name == post.author:
                     content = Post.content
                     subject = Post.subject
@@ -505,18 +508,22 @@ class EditPost(BlogHandler):
 
     def post(self, post_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
-        if not self.user:
-            self.redirect('/login')
-            if self.user.name != post.author:
-                self.render("error.html")
+        if post is not None:
+            if not self.user:
+                self.redirect('/login')
+            else:
+                if self.user.name != post.author:
+                    self.render("error.html")
+                else:
+                    key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+                    p = db.get(key)
+                    p.content = self.request.get('content')
+                    p.put()
+                    time.sleep(0.1)
+                    self.redirect(('/post/%s' % str(p.key().id()) + ('/editpost')))
+                    return
         else:
-            key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-            p = db.get(key)
-            p.content = self.request.get('content')
-            p.put()
-            time.sleep(0.1)
-            self.redirect(('/post/%s' % str(p.key().id()) + ('/editpost')))
-            return
+            self.render('error.html')
 
 # Handler for editing a comment ##############################################
 
