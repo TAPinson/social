@@ -202,6 +202,7 @@ class NewPost(BlogHandler):
             self.render("newpost.html")
         else:
             self.redirect("/login")
+            return
 
     def post(self):
         if not self.user:
