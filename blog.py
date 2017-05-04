@@ -369,11 +369,14 @@ class DeletePost(BlogHandler):
         else:
             key = db.Key.from_path('Post', int(post_id), parent=blog_key())
             post = db.get(key)
-            if self.user.name == post.author:
-                db.delete(key)
-                time.sleep(0.1)
-                self.redirect('/blog')
-                return
+            if post and self.user.name == post.author:
+                if self.user.name == post.author:
+                    db.delete(key)
+                    time.sleep(0.1)
+                    self.redirect('/blog')
+                    return
+                else:
+                    self.render('error.html')
             else:
                 self.render('error.html')
 
