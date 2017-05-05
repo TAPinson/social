@@ -596,8 +596,15 @@ class ViewComment(BlogHandler):
     def get(self, post_id, comment_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
-        self.render('viewcomment.html', post=post,
+        if post:
+            if comments:
+                self.render('viewcomment.html', post=post,
                     comments=comments, comment_id=comment_id)
+            else:
+                self.redirect('error.html')
+                return
+        else: self.redirect('error.html')
+        return
 
 # WSGI Mapping ################################################################
 
