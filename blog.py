@@ -393,33 +393,36 @@ class LikePost(BlogHandler):
             self.redirect('/login')
             return
         else:
-            liker = self.user.name
-            if liker != post.author:
-                if liker not in post.likers:
-                    post.likes += 1
-                    post.likers = post.likers + " " + liker
-                    post.put()
-                    time.sleep(0.1)
-                    self.redirect("/blog")
-                    return
-                elif liker in post.likers:
-                    names = post.likers
-                    print names
-                    names = names.split()
-                    print names
-                    if liker in names:
-                        print names
-                        names.remove(liker)
-                        print names
-                        post.likes -= 1
-                        names = "".join(names)
-                        post.likers = names
+            if post is None:
+                self.render('error.html')
+            else:
+                liker = self.user.name
+                if liker != post.author:
+                    if liker not in post.likers:
+                        post.likes += 1
+                        post.likers = post.likers + " " + liker
                         post.put()
                         time.sleep(0.1)
                         self.redirect("/blog")
                         return
-            else:
-                self.render("error.html")
+                    elif liker in post.likers:
+                        names = post.likers
+                        print names
+                        names = names.split()
+                        print names
+                        if liker in names:
+                            print names
+                            names.remove(liker)
+                            print names
+                            post.likes -= 1
+                            names = "".join(names)
+                            post.likers = names
+                            post.put()
+                            time.sleep(0.1)
+                            self.redirect("/blog")
+                            return
+                else:
+                    self.render("error.html")
 
 # Handler for Commenting on a post ###########################################
 
@@ -452,9 +455,8 @@ class NewComment(BlogHandler):
             author = self.user.name
             comment = db.GqlQuery("SELECT * FROM Comment WHERE post= :post and"
                                   " author= :author", post=post_id, author=author)
-            key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-            post = db.get(key)
             if comment is not None:
+                post = db.get(key)
                 comment = self.request.get('comment')
                 author = self.user.name
                 if comment:
@@ -542,17 +544,20 @@ class EditComment(BlogHandler):
         post = Post.get_by_id(int(comment_id), parent=blog_key())
         comments = Comment.get_by_id(int(comment_id),
                                      parent=self.user.key())
-        content = comments.comment
-        if not self.user:
-            self.render('error.html')
+        if comments is not None:
+            content = comments.comment
+            if not self.user:
+                self.render('error.html')
+            else:
+                author = self.user.name
+                commentToEdit = comments.comment
+                commentToEdit = self.request.get('commentToEdit')
+                content = Post.content
+                subject = Post.subject
+                self.render('editcomment.html', subject=subject, post=post,
+                            content=content, comments=comments)
         else:
-            author = self.user.name
-            commentToEdit = comments.comment
-            commentToEdit = self.request.get('commentToEdit')
-            content = Post.content
-            subject = Post.subject
-            self.render('editcomment.html', subject=subject, post=post,
-                        content=content, comments=comments)
+            self.render('error.html')
 
     def post(self, post_id, comment_id):
         if not self.user:
