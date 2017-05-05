@@ -357,10 +357,11 @@ class DeletePost(BlogHandler):
         else:
             key = db.Key.from_path('Post', int(post_id), parent=blog_key())
             post = db.get(key)
-            if self.user.name == post.author:
-                self.render('deletepost.html')
-            else:
-                self.render('error.html')
+            if post is not None:
+                if self.user.name == post.author:
+                    self.render('deletepost.html')
+                else:
+                    self.render('error.html')
 
     def post(self, post_id):
         if not self.user:
@@ -439,7 +440,6 @@ class NewComment(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         subject = post.subject
         content = post.content
-
         self.render('comment.html', subject=subject, post=post,
                     content=content, postuser=post.author, pkey=post.key())
 
@@ -454,15 +454,19 @@ class NewComment(BlogHandler):
                                   " author= :author", post=post_id, author=author)
             key = db.Key.from_path('Post', int(post_id), parent=blog_key())
             post = db.get(key)
-            comment = self.request.get('comment')
-            author = self.user.name
-            if comment:
-                parent = self.user.key()
-                c = Comment(post=post_id, comment=comment, parent=parent,
+            if comment is not None:
+                comment = self.request.get('comment')
+                author = self.user.name
+                if comment:
+                    parent = self.user.key()
+                    c = Comment(post=post_id, comment=comment, parent=parent,
                             author=author)
-                c.put()
-                p = post
-                self.redirect(('/post/%s' % str(p.key().id()) + ('/comment')))
+                    c.put()
+                    p = post
+                    self.redirect(('/post/%s' % str(p.key().id()) + ('/comment')))
+                else:
+                    self.render('error.html')
+            else:self.render('error.html')
 
 # Handler for deleting a comment #############################################
 
