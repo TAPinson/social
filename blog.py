@@ -476,7 +476,8 @@ class NewComment(BlogHandler):
                         return
                     else:
                         self.render('error.html')
-            else:self.render('error.html')
+            else:
+                self.render('error.html')
 
 # Handler for deleting a comment #############################################
 
