@@ -443,13 +443,16 @@ class NewComment(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         if not self.user:
             self.redirect('/logn')
-        else:
-
-            subject = post.subject
-            content = post.content
-            self.render('comment.html', subject=subject, post=post,
-                        content=content, postuser=post.author, pkey=post.key())
             return
+        else:
+            if post is not None:
+                subject = post.subject
+                content = post.content
+                self.render('comment.html', subject=subject, post=post,
+                            content=content, postuser=post.author, pkey=post.key())
+            else:
+                self.render('error.html')
+                return
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
@@ -596,15 +599,15 @@ class ViewComment(BlogHandler):
     def get(self, post_id, comment_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         comments = Comment.get_by_id(int(comment_id), parent=self.user.key())
-        if post:
-            if comments:
+        if post is not None:
+            if comments is not None:
                 self.render('viewcomment.html', post=post,
                     comments=comments, comment_id=comment_id)
             else:
-                self.redirect('error.html')
-                return
-        else: self.redirect('error.html')
-        return
+                self.render('error.html')
+        else:
+            self.render('error.html')
+
 
 # WSGI Mapping ################################################################
 
