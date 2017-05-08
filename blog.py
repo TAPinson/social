@@ -608,6 +608,22 @@ class ViewComment(BlogHandler):
         else:
             self.render('error.html')
 
+# Fix for data not persisting in development environment datastore ############
+
+developmentServer = False
+
+if os.environ.get('SERVER_SOFTWARE','').startswith('Development'):
+    developmentServer = True
+
+class BaseRequestHandler(webapp2.RequestHandler):
+    def dispatch(self):
+        retValue = super(BaseRequestHandler, self).dispatch()
+        if developmentServer:
+                from google.appengine.tools import dev_appserver
+                dev_appserver.TearDownStubs()
+
+        return retValue
+
 
 # WSGI Mapping ################################################################
 
