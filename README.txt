@@ -4,6 +4,7 @@ Requirements:
 GIT
 Python 2.7+
 Google Python SDK
+Open port 8000 available
 
 Setup:
 -Ensure GIT installed
